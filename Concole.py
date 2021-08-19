@@ -9,6 +9,9 @@ import sys
 import time
 import socket 
 
+import Move as move
+import parameter
+
 ip_robo_hinten = b"192.168.33.11"
 ip_robo_vorne = b"192.168.33.10"
 
@@ -35,20 +38,20 @@ def current_position():
     tnred.close()
 
 def start_mov():
-    tnblue = telnetlib.Telnet(ip_robo_vorne)
-    tnred = telnetlib.Telnet(ip_robo_hinten)
+    tnblue = telnetlib.Telnet(parameter.network_parameters.ip_robo_vorne)
+    tnred = telnetlib.Telnet(parameter.network_parameters.ip_robo_hinten)
+    move.defining_connections(parameter.network_parameters)    
 
-    Meas_where="MOV\r\n".encode("ascii")
-    tnblue.write(Meas_where)
-    check_front = tnblue.read_until("Doesntmatter".encode("ascii"), 1.0)
-    print(check_front)
-    tnred.write(Meas_where)
-    check_back =tnred.read_until("Doesntmatter".encode("ascii"), 1.0)
-    print(check_back)
-    tnblue.close()
-    tnred.close()
+    ## Starting the PXI-System
+    move.starting_RCX_move(tnblue, tnred)
+    ## Starting the PXI-System
+    print("starting PXI...")
+    move.UDP_connection(parameter.udp_messages.message_PXI_start, parameter.udp_messages.response_PXI_start)
+    print("successsfully started PXI")
 
-    subprocess.run(["python",r"C:\Users\5GLab\Desktop\Programme\Standard\Testarea\Move.py"])
+
+
+
 def reset_rob():
     print("Reseting Roboter:")
 
@@ -75,10 +78,9 @@ def reset_rob():
     tnred.close()
     tnblue.close()
     print("Reset complete!")
-
 def point_calc():
     print("opening")
-    subprocess.run(["python",r"C:\Users\5GLab\Desktop\Programme\Standard\Testarea\reset_test.py"])
+    subprocess.run(["python","linear_2d_planning.py"])
     print("closed")
 
 
