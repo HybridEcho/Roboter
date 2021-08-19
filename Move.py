@@ -8,9 +8,6 @@ import numpy as np
 from numpy import genfromtxt
 import socket 
 
-
-print ("Hello")
-
 start_time = time.time()
 
 #defining connections:
