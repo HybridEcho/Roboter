@@ -1,0 +1,2 @@
+print("Reset complete!")
+exit()
