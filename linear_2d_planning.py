@@ -15,7 +15,7 @@ OptionList_Piezo = [
 "size",
 ] 
 
-depth_over_floor = np.loadtxt(r'C:\Users\5GLab\Desktop\Programme\Standard\Testarea\depth_over_floor.txt', dtype=float)
+depth_over_floor = np.loadtxt("depth_over_floor.txt", dtype=float)
 
 def calculat ():
     condition=variable_Piezo.get()
@@ -43,7 +43,7 @@ def calculat ():
         number_cMUT_in_y = int(number_cMUT_in_y)
 
     # define startposition and stepsize
-    start_cMUT = genfromtxt (r"C:\Users\5GLab\Desktop\Programme\Standard\Testarea\start_position_cMUT.csv", delimiter=',')
+    start_cMUT = genfromtxt ("start_position_cMUT.csv", delimiter=',')
     step_size_y_cMUT = np.array([[0, y_pitch_cMUT, 0]])
     step_size_x_cMUT = np.array([[x_pitch_cMUT, 0, 0]])
 
@@ -56,10 +56,10 @@ def calculat ():
             cMUT_Points = np.concatenate((cMUT_Points, next_step_xy_cMUT), axis=0)
 
     #np.savetxt(r"C:\Users\5GLab\Desktop\Programme\Standard\Testarea\cMUT_Points_std_coord.csv", cMUT_Points_std_coord, delimiter=",")
-    np.savetxt(r"C:\Users\5GLab\Desktop\Programme\Standard\Testarea\cMUT_Points.csv", cMUT_Points, delimiter=",")
+    np.savetxt("cMUT_Points.csv", cMUT_Points, delimiter=",")
     cMUT_Points_std = cMUT_Points
     cMUT_Points_std [:, 2]=depth_over_floor
-    np.savetxt(r"C:\Users\5GLab\Desktop\Programme\Standard\Testarea\cMUT_Points_std.csv", cMUT_Points_std, delimiter=",")
+    np.savetxt("cMUT_Points_std.csv", cMUT_Points_std, delimiter=",")
 
     
 
@@ -85,7 +85,7 @@ def calculat ():
         print("error")
 
     # define startposition and stepsize
-    start_Piezo = genfromtxt (r'C:\Users\5GLab\Desktop\Programme\Standard\Testarea\start_position_piezo.csv', delimiter=',')
+    start_Piezo = genfromtxt ("start_position_piezo.csv", delimiter=',')
     step_size_y_Piezo = np.array([[0, y_pitch_Piezo, 0]])
     step_size_x_Piezo = np.array([[x_pitch_Piezo, 0, 0]])
     Piezo_Points = np.array([[]]).reshape(0,3)
@@ -96,14 +96,14 @@ def calculat ():
            next_step_y_Piezo = start_Piezo + (i * step_size_y_Piezo) + (b * step_size_x_Piezo)
            Piezo_Points = np.concatenate((Piezo_Points, next_step_y_Piezo), axis=0)
 
-    np.savetxt(r"C:\Users\5GLab\Desktop\Programme\Standard\Testarea\Piezo_Points.csv", Piezo_Points, delimiter=",")
+    np.savetxt("Piezo_Points.csv", Piezo_Points, delimiter=",")
 
     # standardisieren der Piezo Punkte
     Piezo_Points_std = Piezo_Points
     Piezo_Points_std [:, 2]=depth_over_floor
     Piezo_Points_std=([685 , -200, 0] - Piezo_Points_std) * [1, 1, -1]
 
-    np.savetxt(r"C:\Users\5GLab\Desktop\Programme\Standard\Testarea\Piezo_Points_std.csv", Piezo_Points_std, delimiter=",")
+    np.savetxt("Piezo_Points_std.csv", Piezo_Points_std, delimiter=",")
 
 def condition_Piezo ():
     condition=variable_Piezo.get()
@@ -184,8 +184,8 @@ def condition_cMUT ():
         canvas_calculator.create_window(200, 450, window=hinweis1)
 
 def point_plot ():
-    cMUT_Points_std = genfromtxt (r'C:\Users\5GLab\Desktop\Programme\Standard\Testarea\cMUT_Points_std.csv', delimiter=',')
-    Piezo_Points_std = genfromtxt (r'C:\Users\5GLab\Desktop\Programme\Standard\Testarea\Piezo_Points_std.csv', delimiter=',')
+    cMUT_Points_std = genfromtxt ('cMUT_Points_std.csv', delimiter=',')
+    Piezo_Points_std = genfromtxt ('Piezo_Points_std.csv', delimiter=',')
 
     cMUT_Points_std = np.array(cMUT_Points_std, ndmin=2)
     Piezo_Points_std = np.array(Piezo_Points_std, ndmin=2)
@@ -196,8 +196,6 @@ def point_plot ():
     print("Standard Piezo Points")
     print(Piezo_Points_std)
     print("")
-    print("noraml Piezo")
-    print(Piezo_Points)
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection="3d")

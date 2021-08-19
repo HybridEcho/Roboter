@@ -5,44 +5,30 @@ from os import read
 import telnetlib
 import time
 import numpy as np
-from numpy import genfromtxt
 import socket 
+import parameter
 
-start_time = time.time()
+#getting Pointfiles; Pointfiles musst contain a position for each Robot for each measurement, 
+# Format: .csv with [x1,y1,z1] one point per line
+# blue=Piezo=vorne  red=cMUT=hinten
+cMUT_Points_np = np.atleast_2d(np.genfromtxt ("cMUT_Points.csv", delimiter=','))
+piezo_Points_np = np.atleast_2d(np.genfromtxt ("Piezo_Points.csv", delimiter=','))
+cMUT_Points_np_std = np.atleast_2d(np.genfromtxt ("cMUT_Points_std.csv", delimiter=','))
+piezo_Points_np_std= np.atleast_2d(np.genfromtxt ("Piezo_Points_std.csv", delimiter=','))
 
-#defining connections:
-ip_PXI = "192.168.33.2"
-port_PXI = 53000
-ip_robo_hinten = b"192.168.33.11"
-ip_robo_vorne = b"192.168.33.10"
-
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.bind(("192.168.33.101", port_PXI))
-
-tnblue = telnetlib.Telnet(ip_robo_vorne)
-tnred = telnetlib.Telnet(ip_robo_hinten)
-
-# #Festlegen der Ordernamen und Logfilenamen
-name_folder = input(":")
-
-#Define Messages for PXI
-message_PXI_start="MEAS:NEW:" + name_folder
-message_PXI_reached_position="MEAS:START"
-message_PXI_check_measure="MEAS:CHECK_READY"
-message_PXI_end="MEAS:REPORT"
-message_PXI_Log="MEAS:LOG:LOGFILE:"
-
-response_PXI_start="ACK:MEAS:NEW:" + name_folder
-response_PXI_reached_position="ACK:MEAS:START"
-response_PXI_check_measure="ACK:MEAS:CHECK_READY:READY"
-response_PXI_end="ACK:MEAS:REPORT"
-response_PXI_Log="ACK:MEAS:LOG:LOGFILE"
+def defining_connections (net_param):
+    start_time = time.time()
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.bind(net_param.ip_local_socket, net_param.port_PXI)
+    # #Festlegen der Ordernamen und Logfilenamen
+    folder_name = input(":")
+    parameter.udp_messages.set_folder_name(folder_name)
 
 def UDP_connection(message, response):
-    start_time = time.time()
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     answer_PXI = ""
     while answer_PXI != response.encode("UTF-8"):
-        s.sendto((message.encode("ascii")), (ip_PXI, port_PXI))
+        s.sendto((message.encode("ascii")), (parameter.network_parameters.ip_PXI, parameter.network_parameters.port_PXI))
         try:
             s.settimeout(100)
             daten, addr = s.recvfrom(1024)
@@ -55,24 +41,15 @@ def UDP_connection(message, response):
             print("PXI did not echo after 10s of repeated", message, "sending, Programm ende")
             exit()
 
-#getting Pointfiles; Pointfiles musst contain a position for each Robot for each measurement, 
-# Format: .csv with [x1,y1,z1] one point per line
-# blue=Piezo=vorne  red=cMUT=hinten
-cMUT_Points_np = np.atleast_2d(genfromtxt (r'C:\Users\5GLab\Desktop\Programme\Standard\bscan_adapted_aperture\cMUT_Points.csv', delimiter=','))
-piezo_Points_np = np.atleast_2d(genfromtxt (r"C:\Users\5GLab\Desktop\Programme\Standard\bscan_adapted_aperture\Piezo_Points.csv", delimiter=','))
-cMUT_Points_np_std = np.atleast_2d(genfromtxt (r"C:\Users\5GLab\Desktop\Programme\Standard\bscan_adapted_aperture\cMUT_Points_std.csv", delimiter=','))
-piezo_Points_np_std= np.atleast_2d(genfromtxt (r"C:\Users\5GLab\Desktop\Programme\Standard\bscan_adapted_aperture\Piezo_Points_std.csv", delimiter=','))
+def starting_RCX_move (tnblue, tnred):
+    Meas_where="MOV\r\n".encode("ascii")
+    tnblue.write(Meas_where)
+    check_front = tnblue.read_until("Doesntmatter".encode("ascii"), 1.0)
+    print(check_front)
+    tnred.write(Meas_where)
+    check_back =tnred.read_until("Doesntmatter".encode("ascii"), 1.0)
+    print(check_back)
 
-## Starting the PXI-System
-print("starting PXI...")
-UDP_connection(message_PXI_start, response_PXI_start)
-print("successsfully started PXI")
-
-##Checking Robo-Connection
-print("starting Roboter...")
-print("Robo vorne", tnblue.read_until("Welcome to RCX340".encode("ascii")))
-print("Robo vorne", tnred.read_until("Welcome to RCX340".encode("ascii")))
-print("successfully started Roboter")
 
 for a in range(len(piezo_Points_np)):
     for b in range(len(cMUT_Points_np)):
