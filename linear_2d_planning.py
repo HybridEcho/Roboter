@@ -5,6 +5,7 @@ from mpl_toolkits import mplot3d
 from numpy import genfromtxt
 import matplotlib.pyplot as plt
 import math
+import parameter
 
 OptionList_cMUT = [
 "number",
@@ -210,6 +211,11 @@ def duration ():
     label_duration.config(font=('helvetica', 14))
     canvas_calculator.create_window(300, 550, window=label_duration)
 
+def combining_csv():
+    for number_of_piezo_measurement in range((len(parameter.import_csv.piezo_points_np)+1)):
+        for number_of_cmut_measurement in range(len((parameter.import_csv.cMUT_points_np)+1)):
+            cMUT = np.array([cMUT_Points_np[b,0], cMUT_Points_np[b,1], cMUT_Points_np[b,2]])
+            Piezo = np.array([piezo_Points_np[a,0], piezo_Points_np[a,1], piezo_Points_np[a,2]])
 
 
 calculator= tk.Tk()

@@ -1,12 +1,12 @@
+import telnetlib
 import numpy as np
 
 class network_parameters:
     ip_PXI = "192.168.33.2"
     ip_local_socket = "192.168.33.101"
     port_PXI = 53000
-    ip_robo_hinten = b"192.168.33.11"
-    ip_robo_vorne = b"192.168.33.10"
-
+    tnred = telnetlib.Telnet(b"192.168.33.11")
+    tnblue = telnetlib.Telnet(b"192.168.33.10")
 class udp_messages:
     name_folder = ''
     message_PXI_start="MEAS:NEW:" + name_folder
@@ -23,4 +23,11 @@ class udp_messages:
 
     def set_folder_name(self, name):
         self.name_folder = name
+
+class import_csv:
+    cMUT_points_np = np.atleast_2d(np.genfromtxt ("cMUT_Points.csv", delimiter=','))
+    piezo_points_np = np.atleast_2d(np.genfromtxt ("Piezo_Points.csv", delimiter=','))
+    cMUT_points_np_std = np.atleast_2d(np.genfromtxt ("cMUT_Points_std.csv", delimiter=','))
+    piezo_points_np_std= np.atleast_2d(np.genfromtxt ("Piezo_Points_std.csv", delimiter=','))
+    combined_points_np= np.atleast_2d(np.genfromtxt ("combined_points.csv", delimiter=','))
 

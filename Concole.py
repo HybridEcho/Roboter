@@ -38,16 +38,26 @@ def current_position():
     tnred.close()
 
 def start_mov():
-    tnblue = telnetlib.Telnet(parameter.network_parameters.ip_robo_vorne)
-    tnred = telnetlib.Telnet(parameter.network_parameters.ip_robo_hinten)
     move.defining_connections(parameter.network_parameters)    
 
     ## Starting the PXI-System
-    move.starting_RCX_move(tnblue, tnred)
+    print("starting Roboter...")
+    move.starting_RCX_move(parameter.network_parameters.tnblue, parameter.network_parameters.tnred)
+    print("successsfully started Roboter")
     ## Starting the PXI-System
     print("starting PXI...")
-    move.UDP_connection(parameter.udp_messages.message_PXI_start, parameter.udp_messages.response_PXI_start)
+    move.UDP_connection_PXI(parameter.udp_messages.message_PXI_start, parameter.udp_messages.response_PXI_start)
     print("successsfully started PXI")
+
+    print("start measurement")
+    for number_of_measurement in range((len(csv_data)+1)):
+        move.roboter_movement_by_csv(number_of_measurement,parameter.import_csv.combined_points_np, parameter.network_parameters.tnblue, parameter.network_parameters.tnred)
+        move.roboter_confirmation_position(parameter.network_parameters.tnblue, parameter.network_parameters.tnred)
+        move.UDP_connection_PXI(parameter.udp_messages.message_PXI_reached_position, parameter.udp_messages.response_PXI_reached_position)
+        move.UDP_connection_PXI(PXI_LOG, PXI_LOG)
+        move.UDP_connection_PXI(parameter.udp_messages.message_PXI_check_measure, parameter.udp_messages.response_PXI_check_measure)
+        parameter.network_parameters.tnred.write("0\r\n".encode("ascii"))
+        parameter.network_parameters.tnblue.write("0\r\n".encode("ascii"))
 
 
 
