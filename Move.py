@@ -8,7 +8,7 @@ import numpy as np
 import socket 
 import parameter
 
-def defining_connections (net_param):
+def naming_experiment (net_param):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.bind(net_param.ip_local_socket, net_param.port_PXI)
     # #Festlegen der Ordernamen und Logfilenamen
@@ -33,59 +33,32 @@ def UDP_connection_PXI (message, response):
             print("PXI did not echo after 10s of repeated", message, "sending, Programm ende")
             exit()
 
-def roboter_message (tnblue, message_blue, tnred, message_red):
-    tnblue.write(message_blue)
-    tnred.write(message_red)
-    if message_blue == "MOV\r\n".encode("ascii"):
-        check_front = tnblue.read_until("Doesntmatter".encode("ascii"), 0.5)
-        check_front = tnblue.read_until("Doesntmatter".encode("ascii"), 0.5)
-        print(check_front)
+def roboter_message (tn_robo, message):
+    tn_robo.write(message)
+    if message == "MOV\r\n".encode("ascii"):
+        keep_going = tn_robo.read_until("Doesntmatter".encode("ascii"), 0.5)
+        print(keep_going)
     else:
         print(" ")
 
-def roboter_feedback (tn_robo_blue, tn_robo_red):
-        info_from_robo_blue = tn_robo_blue.expect(["MEAS".encode("ascii"), "ERROR".encode("ascii")], 1.0)
-        print(info_from_robo_blue)
-        if "ERROR".encode("ascii") in info_from_robo_blue :
-            tn_robo_blue.read_until("doesntmatter".encode("ascii"), 1.0)
-            exit()
-        else:
-            message_from_robo_blue = tn_robo_blue.read_until("\n".encode("ascii"))
-            message_from_robo_blue = message_from_robo_blue.decode("ascii")
-            message_from_robo_blue = message_from_robo_blue.strip("\n""\r")
+def roboter_feedback(tn_robo):
+    info_from_robo = tn_robo.expect(["MEAS".encode("ascii"), "ERROR".encode("ascii")], 1.0)
+    print(info_from_robo)
+    if "ERROR".encode("ascii") in info_from_robo :
+        tn_robo.read_until("doesntmatter".encode("ascii"), 1.0)
+        exit()
+    else:
+        message_from_robo = tn_robo.read_until("\n".encode("ascii"))
+        message_from_robo = message_from_robo.decode("ascii")
+        message_from_robo = message_from_robo.strip("\n""\r")
+        print("  Robo " + message_from_robo)
 
-        info_from_robo_red = tn_robo_red.expect(["P11=".encode("ascii"), "ERROR".encode("ascii")], 1.0)
-        print(info_from_robo_red)
-        if "ERROR".encode("ascii") in info_from_robo_red:
-            tn_robo_red.read_until("doesntmatter".encode("ascii"), 1.0)
-            exit()
-        else:
-            message_from_robo_red = tn_robo_red.read_until("\n".encode("ascii"))
-            message_from_robo_red = message_from_robo_red.decode("ascii")
-            message_from_robo_red = message_from_robo_red.strip("\n""\r")
-
-        print("  Robo vorne: " + message_from_robo_blue) 
-        print("  Robob hinten: " + message_from_robo_red)
-
-        time.sleep(0.2)
-
-def roboter_movement_by_csv (number_of_measurement, csv_data, tn_robo_blue, tn_robo_red):
-    #line by line reading of csv file
-    message_robo_blue_point_np = np.array([csv_data[number_of_measurement,0], csv_data[number_of_measurement,1], csv_data[number_of_measurement,2]])
-    message_robo_red_point_np = np.array([csv_data[number_of_measurement+1,0], csv_data[number_of_measurement+1,1], csv_data[number_of_measurement+1,2]])
-
-    ##transforming the single points to robo-readable format
-    message_robo_blue_point_prestring = np.array2string(message_robo_blue_point_np, precision=3, separator=' ', floatmode='fixed', suppress_small=True, formatter={'float_kind': '{: 0.10f}'.format})
-    message_robo_blue_point_string = message_robo_blue_point_prestring.strip('['']')
-    message_robo_red_point_prestring = np.array2string(message_robo_red_point_np, precision=3, separator=' ', floatmode='fixed',  suppress_small=True, formatter={'float_kind': '{: 0.10f}'.format})
-    message_robo_red_point_string = message_robo_red_point_prestring.strip('['']')
-
-    ##generation of the robo-message
-    message_robo_blue_point="P1 = ".encode("ascii") + message_robo_blue_point_string.encode("ascii") + "0 0 0 1\r\n".encode("ascii")
-    message_robo_red_point="P1 = ".encode("ascii") + message_robo_red_point_string.encode("ascii") + "0 0 0 1\r\n".encode("ascii")
-
-    ## transfere of point data to Robo
-    roboter_message(tn_robo_blue, message_robo_blue_point, tn_robo_red, message_robo_red_point)
+def roboter_movement_by_csv(number_of_measurement, csv_data, tn_robo):
+    message_robo_point_np = np.array([csv_data[number_of_measurement,0], csv_data[number_of_measurement,1], csv_data[number_of_measurement,2]])
+    message_robo_point_prestring = np.array2string(message_robo_point_np, precision=3, separator=' ', floatmode='fixed', suppress_small=True, formatter={'float_kind': '{: 0.10f}'.format})
+    message_robo_point_string = message_robo_point_prestring.strip('['']')
+    message_robo_point="P1 = ".encode("ascii") + message_robo_point_string.encode("ascii") + "0 0 0 1\r\n".encode("ascii")
+    roboter_message(tn_robo, message_robo_point)
 
 
 ########################################################################################################
