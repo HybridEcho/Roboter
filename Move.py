@@ -1,5 +1,5 @@
 #-ToDo:
-#- Check settimeout Funktion scheint nicht zu funktionieren
+#- Bei Feedback Roboname mit senden
 
 from os import read
 import telnetlib
@@ -10,7 +10,7 @@ import parameter
 
 def naming_experiment (net_param):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.bind(net_param.ip_local_socket, net_param.port_PXI)
+    s.bind((net_param.ip_local_socket, net_param.port_PXI))
     # #Festlegen der Ordernamen und Logfilenamen
     folder_name = input(":")
     parameter.udp_messages.set_folder_name(folder_name)
@@ -34,38 +34,44 @@ def UDP_connection_PXI (message, response):
             exit()
 
 def roboter_message (tn_robo, message):
+    message=message
     tn_robo.write(message)
+    print("send Message")
     if message == "MOV\r\n".encode("ascii"):
-        keep_going = tn_robo.read_until("Doesntmatter".encode("ascii"), 0.5)
-        print(keep_going)
+        tn_robo.read_until("Doesntmatter".encode("ascii"), 0.5)
     else:
         print(" ")
 
-def roboter_feedback(tn_robo):
-    info_from_robo = tn_robo.expect(["MEAS".encode("ascii"), "ERROR".encode("ascii"), "WRONG STARTING COMMAND".encode("ascii")], 1.0)
+def roboter_feedback(tn_robo, exp_feedback):
+    exp_feedback=exp_feedback.encode("ascii")
+    info_from_robo = tn_robo.read_until(exp_feedback, 3.0)
     print(info_from_robo)
-    if "ERROR".encode("ascii") in info_from_robo:
-        tn_robo.read_until("doesntmatter".encode("ascii"), 1.0)
+    if exp_feedback != info_from_robo:
+        print(info_from_robo)
+        error = tn_robo.read_until("doesntmatter".encode("ascii"), 3.0)
+        print(error)
         exit()
-    elif "MEAS".encode("ascii") in info_from_robo:
+    elif "P".encode("ascii") in info_from_robo:
         message_from_robo = tn_robo.read_until("\n".encode("ascii"))
         message_from_robo = message_from_robo.decode("ascii")
         message_from_robo = message_from_robo.strip("\n""\r")
-        print("  Robo " + message_from_robo)
     elif "WRONG STARTING COMMAND".encode("ascii") in info_from_robo:
-        return info_from_robo
+        print(info_from_robo)
         print("...")
     else:
-        print(info_from_robo)
+        print("")
 
 def roboter_movement_by_csv(number_of_measurement, csv_data, tn_robo):
-    roboter_message(tn_robo, "MOV\r\n".encode("ascii"))
+    roboter_message(tn_robo, ("MOV\r\n".encode("ascii")))
+    print("start Message was send")
     message_robo_point_np = np.array([csv_data[number_of_measurement,0], csv_data[number_of_measurement,1], csv_data[number_of_measurement,2]])
     message_robo_point_prestring = np.array2string(message_robo_point_np, precision=3, separator=' ', floatmode='fixed', suppress_small=True, formatter={'float_kind': '{: 0.10f}'.format})
     message_robo_point_string = message_robo_point_prestring.strip('['']')
-    message_robo_point="P1 = ".encode("ascii") + message_robo_point_string.encode("ascii") + "0 0 0 1\r\n".encode("ascii")
+    print(message_robo_point_string)
+    message_robo_point="P1 = ".encode("ascii") + message_robo_point_string.encode("ascii") + " 0 0 0 1\r\n".encode("ascii")
     roboter_message(tn_robo, message_robo_point)
-    roboter_feedback(tn_robo)
+    print("Point Message was send")
+    roboter_feedback(tn_robo, "P11")
 
 
 ########################################################################################################
