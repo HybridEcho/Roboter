@@ -9,12 +9,11 @@ import sys
 import time
 import socket 
 
-import Move as move
+import move
 import parameter
 
 ip_robo_hinten = b"192.168.33.11"
 ip_robo_vorne = b"192.168.33.10"
-
 
 
 def current_position():
@@ -38,56 +37,43 @@ def current_position():
     tnred.close()
 
 def start_mov():
-    move.defining_connections(parameter.network_parameters)    
-
-    ## Starting the PXI-System
-    print("starting Roboter...")
-    move.starting_RCX_move(parameter.network_parameters.tnblue, parameter.network_parameters.tnred)
-    print("successsfully started Roboter")
+    move.naming_experiment(parameter.network_parameters)    
     ## Starting the PXI-System
     print("starting PXI...")
     move.UDP_connection_PXI(parameter.udp_messages.message_PXI_start, parameter.udp_messages.response_PXI_start)
     print("successsfully started PXI")
 
     print("start measurement")
-    for number_of_measurement in range((len(csv_data)+1)):
-        move.roboter_movement_by_csv(number_of_measurement,parameter.import_csv.combined_points_np, parameter.network_parameters.tnblue, parameter.network_parameters.tnred)
-        move.roboter_confirmation_position(parameter.network_parameters.tnblue, parameter.network_parameters.tnred)
+    for number_of_measurement in range((len(parameter.import_csv.combined_points_np)+1)):
+        move.roboter_movement_by_csv(number_of_measurement,parameter.import_csv.combined_points_np, parameter.network_parameters.tnblue)
+        move.roboter_movement_by_csv(number_of_measurement,parameter.import_csv.combined_points_np, parameter.network_parameters.tnred)
+        time.sleep(0.2)
+
         move.UDP_connection_PXI(parameter.udp_messages.message_PXI_reached_position, parameter.udp_messages.response_PXI_reached_position)
-        move.UDP_connection_PXI(PXI_LOG, PXI_LOG)
+        move.UDP_connection_PXI(parameter.udp_messages.message_PXI_Log, parameter.udp_messages.response_PXI_Log)
         move.UDP_connection_PXI(parameter.udp_messages.message_PXI_check_measure, parameter.udp_messages.response_PXI_check_measure)
-        parameter.network_parameters.tnred.write("0\r\n".encode("ascii"))
-        parameter.network_parameters.tnblue.write("0\r\n".encode("ascii"))
 
-
-
+    parameter.network_parameters.tnblue.close()
+    parameter.network_parameters.tnred.close()
+    move.UDP_connection_PXI(parameter.udp_messages.message_PXI_end, parameter.udp_messages.response_PXI_end)
+    print("End of Experiment")
 
 def reset_rob():
     print("Reseting Roboter:")
-
-    tnblue = telnetlib.Telnet(ip_robo_vorne)
-    tnred = telnetlib.Telnet(ip_robo_hinten)
 
     meas_rob_vorne = "0"
     meas_rob_hinten = "0"
 
     while meas_rob_vorne != "WRONG STARTING COMMAND" and meas_rob_hinten != "WRONG STARTING COMMAND":
-        Meas_reset="RESET\r\n".encode("ascii")
-        tnblue.write(Meas_reset)
-        tnred.write(Meas_reset)
+        move.roboter_message(parameter.network_parameters.tnblue, "RESET\r\n".encode("ascii"))
+        move.roboter_message(parameter.network_parameters.tnred, "RESET\r\n".encode("ascii"))
+        move.roboter_feedback(parameter.network_parameters.tnblue)
+        move.roboter_feedback(parameter.network_parameters.tnred)
 
-        meas_rob_vorne = tnblue.read_until ("WRONG STARTING COMMAND".encode("ascii"), 0.2)
-        meas_rob_vorne = meas_rob_vorne.decode("ascii")
-        meas_rob_vorne = meas_rob_vorne.strip("\n""\r")
-
-        meas_rob_hinten = tnblue.read_until ("WRONG STARTING COMMAND".encode("ascii"), 0.2)
-        meas_rob_hinten = meas_rob_hinten.decode("ascii")
-        meas_rob_hinten = meas_rob_hinten.strip("\n""\r")
         print("...")
-    
-    tnred.close()
-    tnblue.close()
+
     print("Reset complete!")
+
 def point_calc():
     print("opening")
     subprocess.run(["python","linear_2d_planning.py"])

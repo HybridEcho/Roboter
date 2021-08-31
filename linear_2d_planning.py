@@ -18,6 +18,16 @@ OptionList_Piezo = [
 
 depth_over_floor = np.loadtxt("depth_over_floor.txt", dtype=float)
 
+def combining_csv():
+    combined_csv=np.array([[]]).reshape(0,6)
+    for number_of_piezo_measurement in range((len(parameter.import_csv.piezo_points_np)+1)):
+        for number_of_cmut_measurement in range(len((parameter.import_csv.cMUT_points_np)+1)):
+            cMUT = np.array([parameter.import_csv.cMUT_points_np[number_of_cmut_measurement,0], parameter.import_csv.cMUT_points_np[number_of_cmut_measurement,1], parameter.import_csv.cMUT_points_np[number_of_cmut_measurement,2]])
+            Piezo = np.array([parameter.import_csv.piezo_points_np[number_of_piezo_measurement,0], parameter.import_csv.piezo_points_np[number_of_piezo_measurement,1], parameter.import_csv.piezo_points_np[number_of_piezo_measurement,2]])
+            combined= np.concatenate((Piezo, cMUT), axis=None)
+            combined_csv= np.concatenate((combined_csv, combined), axis=0)
+    np.savetxt("Combined_Points.csv", combined_csv, delimiter=",")
+
 def calculat ():
     condition=variable_Piezo.get()
     #### cMUT System ####
@@ -105,6 +115,9 @@ def calculat ():
     Piezo_Points_std=([685 , -200, 0] - Piezo_Points_std) * [1, 1, -1]
 
     np.savetxt("Piezo_Points_std.csv", Piezo_Points_std, delimiter=",")
+
+    combining_csv()
+
 
 def condition_Piezo ():
     condition=variable_Piezo.get()
@@ -210,13 +223,6 @@ def duration ():
     label_duration = tk.Label(calculator, text= "Estimated time: " + str(measurementtime) + " min.")
     label_duration.config(font=('helvetica', 14))
     canvas_calculator.create_window(300, 550, window=label_duration)
-
-def combining_csv():
-    for number_of_piezo_measurement in range((len(parameter.import_csv.piezo_points_np)+1)):
-        for number_of_cmut_measurement in range(len((parameter.import_csv.cMUT_points_np)+1)):
-            cMUT = np.array([cMUT_Points_np[b,0], cMUT_Points_np[b,1], cMUT_Points_np[b,2]])
-            Piezo = np.array([piezo_Points_np[a,0], piezo_Points_np[a,1], piezo_Points_np[a,2]])
-
 
 calculator= tk.Tk()
 #general Window settings

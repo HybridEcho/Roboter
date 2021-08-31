@@ -42,23 +42,30 @@ def roboter_message (tn_robo, message):
         print(" ")
 
 def roboter_feedback(tn_robo):
-    info_from_robo = tn_robo.expect(["MEAS".encode("ascii"), "ERROR".encode("ascii")], 1.0)
+    info_from_robo = tn_robo.expect(["MEAS".encode("ascii"), "ERROR".encode("ascii"), "WRONG STARTING COMMAND".encode("ascii")], 1.0)
     print(info_from_robo)
-    if "ERROR".encode("ascii") in info_from_robo :
+    if "ERROR".encode("ascii") in info_from_robo:
         tn_robo.read_until("doesntmatter".encode("ascii"), 1.0)
         exit()
-    else:
+    elif "MEAS".encode("ascii") in info_from_robo:
         message_from_robo = tn_robo.read_until("\n".encode("ascii"))
         message_from_robo = message_from_robo.decode("ascii")
         message_from_robo = message_from_robo.strip("\n""\r")
         print("  Robo " + message_from_robo)
+    elif "WRONG STARTING COMMAND".encode("ascii") in info_from_robo:
+        return info_from_robo
+        print("...")
+    else:
+        print(info_from_robo)
 
 def roboter_movement_by_csv(number_of_measurement, csv_data, tn_robo):
+    roboter_message(tn_robo, "MOV\r\n".encode("ascii"))
     message_robo_point_np = np.array([csv_data[number_of_measurement,0], csv_data[number_of_measurement,1], csv_data[number_of_measurement,2]])
     message_robo_point_prestring = np.array2string(message_robo_point_np, precision=3, separator=' ', floatmode='fixed', suppress_small=True, formatter={'float_kind': '{: 0.10f}'.format})
     message_robo_point_string = message_robo_point_prestring.strip('['']')
     message_robo_point="P1 = ".encode("ascii") + message_robo_point_string.encode("ascii") + "0 0 0 1\r\n".encode("ascii")
     roboter_message(tn_robo, message_robo_point)
+    roboter_feedback(tn_robo)
 
 
 ########################################################################################################
