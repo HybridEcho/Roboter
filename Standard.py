@@ -1,3 +1,5 @@
+# ToDo: Tkinter Teil Umwandeln in Obejekt
+
 import tkinter as tk
 from mpl_toolkits import mplot3d
 import numpy as np
@@ -6,20 +8,22 @@ import matplotlib.pyplot as plt
 
 
 def set_start_point ():
-    xvorne = entry_start_point_x_Piezo.get()
-    yvorne = entry_start_point_y_Piezo.get()
-    zvorne = entry_start_point_z_Piezo.get()
-    start_position_piezo = np.array([[float(xvorne), float(yvorne), float(zvorne)]])
-    np.savetxt(r"C:\Users\5GLab\Desktop\Programme\Standard\Testarea\start_position_piezo.csv", start_position_piezo, delimiter=",")
+    xblue = entry_start_point_x_Piezo.get()
+    yblue = entry_start_point_y_Piezo.get()
+    zblue = entry_start_point_z_Piezo.get()
+    rblue = entry_start_point_r_Piezo.get()
+    start_position_piezo = np.array([[float(xblue), float(yblue), float(zblue), float(rblue)]])
+    np.savetxt("start_position_piezo.csv", start_position_piezo, delimiter=",")
 
-    xhinten= entry_start_point_x_cMUT.get()
-    yhinten= entry_start_point_y_cMUT.get()
-    zhinten= entry_start_point_z_cMUT.get()
-    start_position_cMUT = np.array([[float(xhinten), float(yhinten), float(zhinten)]])
-    np.savetxt(r"C:\Users\5GLab\Desktop\Programme\Standard\Testarea\start_position_cMUT.csv", start_position_cMUT, delimiter=",")
+    xred= entry_start_point_x_cMUT.get()
+    yred= entry_start_point_y_cMUT.get()
+    zred= entry_start_point_z_cMUT.get()
+    rred = entry_start_point_r_cMUT.get()
+    start_position_cMUT = np.array([[float(xred), float(yred), float(zred), float(rblue)]])
+    np.savetxt("start_position_cMUT.csv", start_position_cMUT, delimiter=",")
 
     depth= entry_depth_over_floor.get()
-    text_file = open(r"C:\Users\5GLab\Desktop\Programme\Standard\Testarea\depth_over_floor.txt", "w")
+    text_file = open("depth_over_floor.txt", "w")
     n = text_file.write(str(depth))
     text_file.close()
 
@@ -90,52 +94,34 @@ label_z_Piezo = tk.Label(standard, text='z:')
 label_z_Piezo.config(font=('helvetica', 14))
 canvas_start_points.create_window(400, 300, window=label_z_Piezo)
 
+## r
+#cMUT
+#settings of entry
+entry_start_point_r_cMUT = tk.Entry (standard)
+canvas_start_points.create_window(200, 450, window=entry_start_point_r_cMUT)
+#naming of entry
+label_r_cMUT = tk.Label(standard, text='r:')
+label_r_cMUT.config(font=('helvetica', 14))
+canvas_start_points.create_window(200, 400, window=label_r_cMUT)
+#Piezo
+#settings of entry
+entry_start_point_r_Piezo = tk.Entry (standard)
+canvas_start_points.create_window(400, 450, window=entry_start_point_r_Piezo)
+#naming of entry
+label_r_Piezo = tk.Label(standard, text='r:')
+label_r_Piezo.config(font=('helvetica', 14))
+canvas_start_points.create_window(400, 400, window=label_r_Piezo)
+
 #settings of depth
 entry_depth_over_floor = tk.Entry (standard)
-canvas_start_points.create_window(300, 500, window=entry_depth_over_floor)
+canvas_start_points.create_window(300, 550, window=entry_depth_over_floor)
 #naming of entry
-label_depth_over_floor = tk.Label(standard, text='z:')
+label_depth_over_floor = tk.Label(standard, text='depth over floor:')
 label_depth_over_floor.config(font=('helvetica', 14))
-canvas_start_points.create_window(300, 450, window=label_depth_over_floor)
+canvas_start_points.create_window(300, 500, window=label_depth_over_floor)
 
 
 button1 = tk.Button(text='set startpoints', command= set_start_point)
 canvas_start_points.create_window(300, 400, window=button1)
 
 standard.mainloop()
-
-
-
-
-# calculator= tk.Tk()
-
-# canvas1 = tk.Canvas(calculator, width = 400, height = 300)
-# canvas1.pack()
-# entry1 = tk.Entry (calculator) 
-# canvas1.create_window(200, 140, window=entry1)
-
-# def getSquareRoot ():  
-#     x1 = entry1.get()
-    
-#     label1 = tk.Label(calculator, text= float(x1)**0.5)
-#     canvas1.create_window(200, 230, window=label1)
-
-#     cMUT_Points = genfromtxt ('cMUT_Points.csv', delimiter=',')
-#     Piezo_Points = genfromtxt ('Piezo_Points.csv', delimiter=',')
-
-#     print(cMUT_Points)
-#     print(Piezo_Points)
-
-#     fig = plt.figure()
-#     ax = fig.add_subplot(111, projection="3d")
-#     ax.plot(cMUT_Points[:,0], cMUT_Points[:,1], cMUT_Points[:,2],markerfacecolor='r', markeredgecolor='r', marker='o', markersize=5, alpha=0.6)
-#     ax.plot(Piezo_Points[:,0], Piezo_Points[:,1], Piezo_Points[:,2],  markerfacecolor='b', markeredgecolor='b', marker='o', markersize=5, alpha=0.6)
-#     plt.show()
-
-    
-# button1 = tk.Button(text='Get the Square Root', command=getSquareRoot)
-# canvas1.create_window(200, 180, window=button1)
-
-# calculator.mainloop()
-
-
