@@ -1,12 +1,11 @@
 import telnetlib
 import numpy as np
-
-# class network_parameters:
-#     ip_PXI = "192.168.33.2"
-#     ip_local_socket = "192.168.33.101"
-#     port_PXI = 53000
-#     tnred = telnetlib.Telnet(b"192.168.33.11")
-#     tnblue = telnetlib.Telnet(b"192.168.33.10")
+class network_parameters:
+    ip_PXI = "192.168.33.2"
+    ip_local_socket = "192.168.33.101"
+    port_PXI = 53000
+    tnred = telnetlib.Telnet(b"192.168.33.11")
+    tnblue = telnetlib.Telnet(b"192.168.33.10")
 class udp_messages:
     name_folder = ''
     message_PXI_start="MEAS:NEW:" + "name_folder"

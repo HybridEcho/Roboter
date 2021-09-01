@@ -4,6 +4,7 @@
 from os import read
 import telnetlib
 import time
+from tkinter.constants import SEL_FIRST
 import numpy as np
 import socket 
 import parameter
@@ -42,36 +43,48 @@ def roboter_message (tn_robo, message):
     else:
         print(" ")
 
-def roboter_feedback(tn_robo, exp_feedback):
-    exp_feedback=exp_feedback.encode("ascii")
-    info_from_robo = tn_robo.read_until(exp_feedback, 3.0)
+def roboter_feedback(tn_robo, exp_feedback_ascii):
+    info_from_robo_ascii = tn_robo.read_until(exp_feedback_ascii, 3.0)
+    print("47")
+    info_from_robo = info_from_robo_ascii.decode("ascii")
+    info_from_robo = str(info_from_robo)
     print(info_from_robo)
-    if exp_feedback != info_from_robo:
+    exp_feedback = exp_feedback_ascii.decode("ascii")
+    exp_feedback =str(exp_feedback)
+    if exp_feedback not in info_from_robo:
         print(info_from_robo)
         error = tn_robo.read_until("doesntmatter".encode("ascii"), 3.0)
         print(error)
         exit()
-    elif "P".encode("ascii") in info_from_robo:
+    elif "P" in info_from_robo:
+        print("59")
         message_from_robo = tn_robo.read_until("\n".encode("ascii"))
         message_from_robo = message_from_robo.decode("ascii")
         message_from_robo = message_from_robo.strip("\n""\r")
-    elif "WRONG STARTING COMMAND".encode("ascii") in info_from_robo:
+        print(message_from_robo)
+    elif "WRONG STARTING COMMAND" in info_from_robo:
         print(info_from_robo)
         print("...")
     else:
-        print("")
+        print("no match in response")
 
 def roboter_movement_by_csv(number_of_measurement, csv_data, tn_robo):
     roboter_message(tn_robo, ("MOV\r\n".encode("ascii")))
     print("start Message was send")
-    message_robo_point_np = np.array([csv_data[number_of_measurement,0], csv_data[number_of_measurement,1], csv_data[number_of_measurement,2]])
-    message_robo_point_prestring = np.array2string(message_robo_point_np, precision=3, separator=' ', floatmode='fixed', suppress_small=True, formatter={'float_kind': '{: 0.10f}'.format})
-    message_robo_point_string = message_robo_point_prestring.strip('['']')
-    print(message_robo_point_string)
-    message_robo_point="P1 = ".encode("ascii") + message_robo_point_string.encode("ascii") + " 0 0 0 1\r\n".encode("ascii")
+    if tn_robo == parameter.network_parameters.tnred :
+        message_robo_point_np = np.array([csv_data[number_of_measurement,4], csv_data[number_of_measurement,5], csv_data[number_of_measurement,6], csv_data[number_of_measurement,7]])
+        message_robo_point_prestring = np.array2string(message_robo_point_np, precision=3, separator=' ', floatmode='fixed', suppress_small=True, formatter={'float_kind': '{: 0.10f}'.format})
+        message_robo_point_string = message_robo_point_prestring.strip('['']')
+        print(message_robo_point_string)
+    else:
+        message_robo_point_np = np.array([csv_data[number_of_measurement,0], csv_data[number_of_measurement,1], csv_data[number_of_measurement,2], csv_data[number_of_measurement,3]])
+        message_robo_point_prestring = np.array2string(message_robo_point_np, precision=3, separator=' ', floatmode='fixed', suppress_small=True, formatter={'float_kind': '{: 0.10f}'.format})
+        message_robo_point_string = message_robo_point_prestring.strip('['']')
+        print(message_robo_point_string)
+    message_robo_point="P1 = ".encode("ascii") + message_robo_point_string.encode("ascii") + " 0 0 1\r\n".encode("ascii")
     roboter_message(tn_robo, message_robo_point)
     print("Point Message was send")
-    roboter_feedback(tn_robo, "P11")
+    roboter_feedback(tn_robo, "P11=".encode("ascii"))
 
 
 ########################################################################################################

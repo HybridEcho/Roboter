@@ -11,7 +11,6 @@ import subprocess
 import sys
 import time
 import socket 
-
 import move
 import parameter
 
@@ -21,12 +20,12 @@ ip_robo_vorne = b"192.168.33.10"
 
 def current_position():
     import parameter
-    move.roboter_message(parameter.network_parameters.tnblue,"POINT\r".encode("ascii"))
+    move.roboter_message(parameter.network_parameters.tnblue,"POINT\r")
     print("Blue Robot:")
-    move.roboter_feedback(parameter.network_parameters.tnblue, Point)
-    move.roboter_message(parameter.network_parameters.tnred,"POINT\r".encode("ascii"))
+    move.roboter_feedback(parameter.network_parameters.tnblue, "P20=\r")
+    move.roboter_message(parameter.network_parameters.tnred,"POINT\r")
     print("Red Robot:")
-    move.roboter_feedback(parameter.network_parameters.tnred, Point)
+    move.roboter_feedback(parameter.network_parameters.tnred, "P20=\r")
 
     parameter.network_parameters.tnblue.close()
     parameter.network_parameters.tnred.close()
@@ -36,20 +35,20 @@ def start_mov():
     ## Start Robo
     print("starting Roboter...")
     print("blue")
-    move.roboter_feedback(parameter.network_parameters.tnblue, "Welcome to RCX340")
+    move.roboter_feedback(parameter.network_parameters.tnblue, "Welcome to RCX340".encode("ascii"))
     print("red")
-    move.roboter_feedback(parameter.network_parameters.tnred, "Welcome to RCX340")
+    move.roboter_feedback(parameter.network_parameters.tnred, "Welcome to RCX340".encode("ascii"))
     ## Starting the PXI-System
     print("starting PXI...")
-    #move.UDP_connection_PXI(parameter.udp_messages.message_PXI_start, parameter.udp_messages.response_PXI_start)
+    move.UDP_connection_PXI(parameter.udp_messages.message_PXI_start, parameter.udp_messages.response_PXI_start)
     print("successsfully started PXI")
 
     print("start measurement")
     for number_of_measurement in range((len(parameter.import_csv.combined_points_np)+1)):
-        print("Blue")
-        move.roboter_movement_by_csv(number_of_measurement,parameter.import_csv.combined_points_np, parameter.network_parameters.tnblue)
         print("red")
         move.roboter_movement_by_csv(number_of_measurement,parameter.import_csv.combined_points_np, parameter.network_parameters.tnred)
+        print("Blue")
+        move.roboter_movement_by_csv(number_of_measurement,parameter.import_csv.combined_points_np, parameter.network_parameters.tnblue)
         time.sleep(0.2)
 
         move.UDP_connection_PXI(parameter.udp_messages.message_PXI_reached_position, parameter.udp_messages.response_PXI_reached_position)
@@ -107,7 +106,10 @@ canvas_start_points.create_window(150, 350, window=button3)
 button4 = tk.Button(text='Point Calc', command= point_calc)
 canvas_start_points.create_window(150, 300, window=button4)
 
-button5 = tk.Button(text='b Scan by Piezo', command= bscan)
+button5 = tk.Button(text='b Scan by Piezo', command= bscan_piezo)
 canvas_start_points.create_window(150, 250, window=button5)
+
+button6 = tk.Button(text='b Scan both', command= bscan_both)
+canvas_start_points.create_window(300, 250, window=button6)
 
 standard.mainloop()
