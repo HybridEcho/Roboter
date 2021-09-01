@@ -80,9 +80,14 @@ def point_calc():
     subprocess.run(["python","linear_2d_planning.py"])
     print("closed")
 
-def bscan():
+def bscan_piezo():
     print("opening")
-    subprocess.run(["python","b_scan.py"])
+    subprocess.run(["python","b_scan_piezo.py"])
+    print("closed")
+
+def bscan_both():
+    print("opening")
+    subprocess.run(["python","b_scan_both.py"])
     print("closed")
 
 standard= tk.Tk()
