@@ -6,6 +6,7 @@ from numpy import genfromtxt
 import matplotlib.pyplot as plt
 import math
 import parameter
+import importlib
 
 OptionList_cMUT = [
 "number",
@@ -19,6 +20,7 @@ OptionList_Piezo = [
 depth_over_floor = np.loadtxt("depth_over_floor.txt", dtype=float)
 
 def combining_csv():
+    importlib.reload(parameter)
     combined_csv=np.array([[]]).reshape(0,8)
     for number_of_piezo_measurement in range((len(parameter.import_csv.piezo_points_np))):
         for number_of_cmut_measurement in range(len((parameter.import_csv.cMUT_points_np))):

@@ -1,6 +1,7 @@
 #ToDo:
-# Bei Current Position die Antowrt des Roboters checken und das Signalwort an den Roboter
+# die Planungstools modularisieren
 
+import importlib
 import tkinter as tk
 from mpl_toolkits import mplot3d
 import numpy as np
@@ -19,19 +20,18 @@ ip_robo_vorne = b"192.168.33.10"
 
 
 def current_position():
-    import parameter
-    move.roboter_message(parameter.network_parameters.tnblue,"POINT\r")
+    move.roboter_message(parameter.network_parameters.tnblue,"POINT\r".encode("ascii"))
     print("Blue Robot:")
-    move.roboter_feedback(parameter.network_parameters.tnblue, "P20=\r")
-    move.roboter_message(parameter.network_parameters.tnred,"POINT\r")
+    move.roboter_feedback(parameter.network_parameters.tnblue, "P20=\r".encode("ascii"))
+    move.roboter_message(parameter.network_parameters.tnred,"POINT\r".encode("ascii"))
     print("Red Robot:")
-    move.roboter_feedback(parameter.network_parameters.tnred, "P20=\r")
-
-    parameter.network_parameters.tnblue.close()
-    parameter.network_parameters.tnred.close()
+    move.roboter_feedback(parameter.network_parameters.tnred, "P20=".encode("ascii"))
 
 def start_mov():
-    move.naming_experiment(parameter.network_parameters) 
+    ## Setting Foldername
+    foldername=input(":")
+    message_PXI_start=parameter.udp_messages.message_PXI_start+foldername
+    response_PXI_start=parameter.udp_messages.response_PXI_start+foldername
     ## Start Robo
     print("starting Roboter...")
     print("blue")
@@ -40,36 +40,38 @@ def start_mov():
     move.roboter_feedback(parameter.network_parameters.tnred, "Welcome to RCX340".encode("ascii"))
     ## Starting the PXI-System
     print("starting PXI...")
-    move.UDP_connection_PXI(parameter.udp_messages.message_PXI_start, parameter.udp_messages.response_PXI_start)
+    move.UDP_connection_PXI(message_PXI_start, response_PXI_start)
     print("successsfully started PXI")
 
     print("start measurement")
-    for number_of_measurement in range((len(parameter.import_csv.combined_points_np)+1)):
-        print("red")
-        move.roboter_movement_by_csv(number_of_measurement,parameter.import_csv.combined_points_np, parameter.network_parameters.tnred)
-        print("Blue")
-        move.roboter_movement_by_csv(number_of_measurement,parameter.import_csv.combined_points_np, parameter.network_parameters.tnblue)
+    for number_of_measurement in range((len(parameter.import_csv.load_combined_points_np()))):
+        print("Measurement:", number_of_measurement+1, "of", (len(parameter.import_csv.load_combined_points_np())))
+        print("  red")
+        move.roboter_movement_by_csv(number_of_measurement,parameter.import_csv.load_combined_points_np(), parameter.network_parameters.tnred)
+        print("  Blue")
+        move.roboter_movement_by_csv(number_of_measurement,parameter.import_csv.load_combined_points_np(), parameter.network_parameters.tnblue)
         time.sleep(0.2)
 
         move.UDP_connection_PXI(parameter.udp_messages.message_PXI_reached_position, parameter.udp_messages.response_PXI_reached_position)
         move.UDP_connection_PXI(parameter.udp_messages.message_PXI_Log, parameter.udp_messages.response_PXI_Log)
         move.UDP_connection_PXI(parameter.udp_messages.message_PXI_check_measure, parameter.udp_messages.response_PXI_check_measure)
 
-    parameter.network_parameters.tnblue.close()
-    parameter.network_parameters.tnred.close()
     move.UDP_connection_PXI(parameter.udp_messages.message_PXI_end, parameter.udp_messages.response_PXI_end)
     print("End of Experiment")
 
 def reset_rob():
     print("Reseting Roboter:")
-
-    while "WRONG STARTING COMMAND" in move.roboter_feedback(parameter.network_parameters.tnblue) and "WRONG STARTING COMMAND" in move.roboter_feedback(parameter.network_parameters.tnred):
+    info_from_robo_blue="0"
+    while "WRONG STARTING COMMAND" not in info_from_robo_blue:
         print("Try reset blue")
         move.roboter_message(parameter.network_parameters.tnblue, "RESET\r\n".encode("ascii"))
+        info_from_robo_blue=move.roboter_feedback(parameter.network_parameters.tnblue, "WRONG STARTING COMMAND".encode("ascii"))
+        print("...")
+    info_from_robo_red="0"
+    while "WRONG STARTING COMMAND" not in info_from_robo_red:
         print("Try reset red")
         move.roboter_message(parameter.network_parameters.tnred, "RESET\r\n".encode("ascii"))
-        #move.roboter_feedback(parameter.network_parameters.tnblue)
-        #move.roboter_feedback(parameter.network_parameters.tnred)
+        info_from_robo_red=move.roboter_feedback(parameter.network_parameters.tnred, "WRONG STARTING COMMAND".encode("ascii"))
         print("...")
 
     print("Reset complete!")

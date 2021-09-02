@@ -9,13 +9,6 @@ import numpy as np
 import socket 
 import parameter
 
-def naming_experiment (net_param):
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.bind((net_param.ip_local_socket, net_param.port_PXI))
-    # #Festlegen der Ordernamen und Logfilenamen
-    folder_name = input(":")
-    parameter.udp_messages.set_folder_name(folder_name)
-
 def UDP_connection_PXI (message, response):
     start_time = time.time()
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -45,28 +38,25 @@ def roboter_message (tn_robo, message):
 
 def roboter_feedback(tn_robo, exp_feedback_ascii):
     info_from_robo_ascii = tn_robo.read_until(exp_feedback_ascii, 3.0)
-    print("47")
     info_from_robo = info_from_robo_ascii.decode("ascii")
     info_from_robo = str(info_from_robo)
-    print(info_from_robo)
     exp_feedback = exp_feedback_ascii.decode("ascii")
     exp_feedback =str(exp_feedback)
     if exp_feedback not in info_from_robo:
+        print("Error-Schleife")
         print(info_from_robo)
         error = tn_robo.read_until("doesntmatter".encode("ascii"), 3.0)
         print(error)
-        exit()
+        return(error)
     elif "P" in info_from_robo:
-        print("59")
+        print("P-Schleife")
         message_from_robo = tn_robo.read_until("\n".encode("ascii"))
         message_from_robo = message_from_robo.decode("ascii")
         message_from_robo = message_from_robo.strip("\n""\r")
         print(message_from_robo)
-    elif "WRONG STARTING COMMAND" in info_from_robo:
+    elif "WRONG" in info_from_robo:
         print(info_from_robo)
-        print("...")
-    else:
-        print("no match in response")
+        return(info_from_robo)
 
 def roboter_movement_by_csv(number_of_measurement, csv_data, tn_robo):
     roboter_message(tn_robo, ("MOV\r\n".encode("ascii")))

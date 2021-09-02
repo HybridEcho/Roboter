@@ -1,14 +1,11 @@
-import numpy as np
+from importlib import reload
+import importlib
+import parameter
+import move
+import importlib
 
-a = np.array([[1, 2], [3, 4]])
-b = np.array([[5, 6]])
-c = np.concatenate((a, b), axis=0)
-print(c)
+print(parameter.udp_messages.message_PXI_start)
 
+importlib.reload(parameter)
 
-combined_csv=np.array([[1,2], [5,6], [10,11]])
-combined=np.array([[3,4]])
-
-combined_csv= np.concatenate((combined_csv, combined), axis=0)
-
-print(combined_csv)
+print(parameter.udp_messages.message_PXI_start)
