@@ -6,7 +6,7 @@ from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
 from PyQt5 import uic
 from roboter_operation import RoboterOperation
-from pxi_operation import PXIOperation
+#from pxi_operation import PXIOperation
 
 MW_Ui, MW_Base = uic.loadUiType('gui_view.ui')
 
@@ -19,14 +19,14 @@ class MainWindow(MW_Base, MW_Ui):
         self.setupUi(self)
 
         self.roboter_operation = RoboterOperation()
-        self.pxi_operation = PXIOperation()
+        #self.pxi_operation = PXIOperation()
 
         ##################
         # Connect Events #
         ##################
 
         self.control_play.clicked.connect(self.roboter_operation.save_status)
-        self.control_stop.clicked.connect(self.pxi_operation.status)
+        #self.control_stop.clicked.connect(self.pxi_operation.status)
 
         ##################
         ##################
