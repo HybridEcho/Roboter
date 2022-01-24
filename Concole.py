@@ -8,7 +8,7 @@ from mpl_toolkits import mplot3d
 import numpy as np
 from numpy import genfromtxt
 import matplotlib.pyplot as plt
-import telnetlib
+import telnetlib #kann eventuell weg
 import subprocess
 import time
 import socket 
@@ -61,13 +61,13 @@ def roboter_message (tn_robo, message):
     message=message
     tn_robo.write(message)
     print("send Message")
-    if message == "MOV\r\n".encode("ascii"):
-        tn_robo.read_until("Doesntmatter".encode("ascii"), 0.5)
+    if message == "MOV\r\n".encode("ascii"): 
+        tn_robo.read_until("Doesntmatter".encode("ascii"), 0.5) #Workaround, um Datenleitung zu resetten (kann eventuell weggelassen werden)
     else:
         print(" ")
         
-def roboter_feedback(tn_robo, exp_feedback_ascii):
-    info_from_robo_ascii = tn_robo.read_until(exp_feedback_ascii, 10.0)
+def roboter_feedback(tn_robo, exp_feedback_ascii): 
+    info_from_robo_ascii = tn_robo.read_until(exp_feedback_ascii, 10.0) #10 Sekunden Wartezeit
     info_from_robo = info_from_robo_ascii.decode("ascii")
     info_from_robo = str(info_from_robo)
     exp_feedback = exp_feedback_ascii.decode("ascii")
@@ -75,12 +75,12 @@ def roboter_feedback(tn_robo, exp_feedback_ascii):
     if exp_feedback not in info_from_robo:
         print("Error-Schleife")
         print(info_from_robo)
-        error = tn_robo.read_until("doesntmatter".encode("ascii"), 3.0)
+        error = tn_robo.read_until("doesntmatter".encode("ascii"), 3.0) #Workaround, auf Fehler warten
         print(error)
         return(error)
     elif "P" in info_from_robo:
         print("P-Schleife")
-        message_from_robo = tn_robo.read_until("\n".encode("ascii"), 2.0)
+        message_from_robo = tn_robo.read_until("\n".encode("ascii"), 2.0) 
         message_from_robo = message_from_robo.decode("ascii")
         message_from_robo = message_from_robo.strip("\n""\r")
         print(message_from_robo)
@@ -123,7 +123,7 @@ def mech_b_scan(csv_data, standard):
         print("Measurement:", number_of_measurement+1, "of", (len(csv_data)))
         print("starting Roboter...")
         activity_robot_blue("on")
-        standard.update()
+        standard.update()                                       #was macht dieser Abschnitt?
         roboter_movement_by_csv(number_of_measurement,csv_data, parameter.network_parameters.tnblue)
         activity_robot_red("on")
         activity_robot_blue("off")
