@@ -1,21 +1,41 @@
+from inspect import Parameter
 from PyQt5 import QtCore as qtc
 import time
 import numpy as np
+from parameter import network_parameters
 
 class RoboterOperation(qtc.QObject):
     def save_status(self):
         print("Hallo Hallo.")
     
     def roboter_message (self, tn_robo, message):
-        message=message
-        tn_robo.write(message)
-        print("send Message")
+        """Sends message to roboter controller via ethernet
+
+        Parameters
+        ----------
+        tn_robo : Class with host adress
+            Ethernet adress
+        message : ASCII
+            Command for roboter
+        """
+        message=message  #warum nochmal assignen?
+        network_parameters.tn_robo.write(message)
+        print("send message")
         if message == "MOV\r\n".encode("ascii"): 
             tn_robo.read_until("Doesntmatter".encode("ascii"), 0.5) #Workaround, um Datenleitung zu resetten (kann eventuell weggelassen werden)
         else:
             print(" ")
 
-    def roboter_feedback(self, tn_robo, exp_feedback_ascii): 
+    def roboter_feedback(self, tn_robo, exp_feedback_ascii):
+        """Receives feedback of roboter controller via ethernet
+
+        Parameters
+        ----------
+        tn_robo : Class with host adress
+            Ethernet adress
+        exp_feedback_ascii : [type]
+            [description]
+        """
         info_from_robo_ascii = tn_robo.read_until(exp_feedback_ascii, 10.0) #10 Sekunden Wartezeit
         info_from_robo = info_from_robo_ascii.decode("ascii")
         info_from_robo = str(info_from_robo)
@@ -26,7 +46,7 @@ class RoboterOperation(qtc.QObject):
             print(info_from_robo)
             error = tn_robo.read_until("doesntmatter".encode("ascii"), 3.0) #Workaround, auf Fehler warten
             print(error)
-            return(error)
+            return error
         elif "P" in info_from_robo:
             print("P-Schleife")
             message_from_robo = tn_robo.read_until("\n".encode("ascii"), 2.0) 
@@ -35,12 +55,21 @@ class RoboterOperation(qtc.QObject):
             print(message_from_robo)
         elif "WRONG" in info_from_robo:
             print(info_from_robo)
-            return(info_from_robo)
+            return info_from_robo
+    
+    def roboter_position_blue(self):
+        self.roboter_message(network_parameters.tnblue, ("C:RB:CURRENT_POSITION\r\n".encode("ascii")))
+        self.roboter_feedback(network_parameters.tnblue, ("RB:END_MESSAGE".encode("ascii")))
+
+
+
+
+
     
     def roboter_movement_by_csv(self, number_of_measurement, csv_data, tn_robo):
         self.roboter_message(tn_robo, ("MOV\r\n".encode("ascii")))
         print("start Message was send")
-        if tn_robo == parameter.network_parameters.tnred :
+        if tn_robo == network_parameters.tnred :
             message_robo_point_np = np.array([csv_data[number_of_measurement,4], csv_data[number_of_measurement,5], csv_data[number_of_measurement,6], csv_data[number_of_measurement,7]])
             message_robo_point_prestring = np.array2string(message_robo_point_np, precision=3, separator=' ', floatmode='fixed', suppress_small=True, formatter={'float_kind': '{: 0.10f}'.format})
             message_robo_point_string = message_robo_point_prestring.strip('['']')

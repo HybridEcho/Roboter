@@ -1,6 +1,5 @@
 #Import packages
 import sys
-from os import path
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
@@ -26,6 +25,7 @@ class MainWindow(MW_Base, MW_Ui):
         ##################
 
         self.control_play.clicked.connect(self.roboter_operation.save_status)
+        self.load_position.clicked.connect(self.roboter_operation.roboter_position_blue)
         #self.control_stop.clicked.connect(self.pxi_operation.status)
 
         ##################
@@ -40,7 +40,3 @@ if __name__ == '__main__':
     app = qtw.QApplication(sys.argv)
     mw = MainWindow()
     sys.exit(app.exec())
-
-
-
-
