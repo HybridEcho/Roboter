@@ -1,5 +1,6 @@
 #Import packages
 import sys
+import os
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
@@ -7,7 +8,9 @@ from PyQt5 import uic
 from roboter_operation import RoboterOperation
 #from pxi_operation import PXIOperation
 
-MW_Ui, MW_Base = uic.loadUiType('gui_view.ui')
+
+os.chdir("C:/Users/Moritz/Documents/Code/Roboter/new_ui") #für Windows notwendig
+MW_Ui, MW_Base = uic.loadUiType("gui_view.ui")
 
 
 class MainWindow(MW_Base, MW_Ui):
@@ -24,7 +27,7 @@ class MainWindow(MW_Base, MW_Ui):
         # Connect Events #
         ##################
 
-        self.control_play.clicked.connect(self.roboter_operation.save_status)
+        #self.control_play.clicked.connect(self.roboter_operation.save_status)
         self.load_position.clicked.connect(self.roboter_operation.roboter_position_blue)
         #self.control_stop.clicked.connect(self.pxi_operation.status)
 
