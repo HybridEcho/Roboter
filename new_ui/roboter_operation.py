@@ -19,7 +19,7 @@ class RoboterOperation(qtc.QObject):
             Command for roboter
         """
         message=message  #warum nochmal assignen?
-        network_parameters.tn_robo.write(message)
+        tn_robo.write(message)
         print("send message")
         if message == "MOV\r\n".encode("ascii"): 
             tn_robo.read_until("Doesntmatter".encode("ascii"), 0.5) #Workaround, um Datenleitung zu resetten (kann eventuell weggelassen werden)
@@ -59,7 +59,7 @@ class RoboterOperation(qtc.QObject):
     
     def roboter_position_blue(self):
         self.roboter_message(network_parameters.tnblue, ("C:RB:CURRENT_POSITION\r\n".encode("ascii")))
-        self.roboter_feedback(network_parameters.tnblue, ("RB:END_MESSAGE".encode("ascii")))
+        self.roboter_feedback(network_parameters.tnblue, ("RB:C:END_MESSAGE".encode("ascii")))
 
 
 
