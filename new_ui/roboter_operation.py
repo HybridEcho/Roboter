@@ -61,8 +61,12 @@ class RoboterOperation(qtc.QObject):
         self.roboter_message(network_parameters.tnblue, ("C:RB:CURRENT_POSITION\r\n".encode("ascii")))
         self.roboter_feedback(network_parameters.tnblue, ("RB:C:END_MESSAGE".encode("ascii")))
 
+    def roboter_position_red(self):
+        self.roboter_message(network_parameters.tnred, ("C:RR:CURRENT_POSITION\r\n".encode("ascii")))
+        self.roboter_feedback(network_parameters.tnred, ("RR:C:END_MESSAGE".encode("ascii")))
 
 
+    
 
 
     
