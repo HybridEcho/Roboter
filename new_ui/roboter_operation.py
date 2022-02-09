@@ -1,4 +1,3 @@
-from inspect import Parameter
 from PyQt5 import QtCore as qtc
 import time
 import numpy as np
@@ -7,8 +6,17 @@ import pandas as pd
 
 class RoboterOperation(qtc.QObject):
     def __init__(self):
-        self.position_robo_blue = np.array()
+        self.position_robo_blue = np.array([1])
     
+    
+
+    def callcalc(self):
+        a = 5+5
+        return a
+
+    def printer(self, number):
+        print(f"Hi number {number}")
+
     # def dev_roboter_message(self, tn_robo, dev_message):
     #     print(tn_robo + "---" + dev_message)
 
@@ -92,11 +100,11 @@ class RoboterOperation(qtc.QObject):
         return message
 
 
-    def calibration_calculation(angle_step_size, angle_total, start_position_blue, start_position_red):
+    def calibration_calculation(angle_step_size, total_rotation, start_position_blue, start_position_red):
         start_position_calibration_blue = start_position_blue
         start_position_calibration_red = start_position_red
-        start_position_calibration_blue[3] = start_position_calibration_blue[3] - angle_total/2
-        number_of_steps = angle_total / angle_step_size
+        start_position_calibration_blue[3] = start_position_calibration_blue[3] - total_rotation/2
+        number_of_steps = total_rotation / angle_step_size
         step_blue = np.arange(0, number_of_steps+1, angle_step_size)
         calibration_array_blue = np.column_stack((start_position_calibration_blue[0] + step_blue*0, start_position_calibration_blue[1] + step_blue*0, start_position_calibration_blue[2] + step_blue*0, np.round(start_position_calibration_blue[3] + step_blue, 3)))
         calibration_array_red = np.tile(start_position_calibration_red, (int(number_of_steps+1), 1))
@@ -116,7 +124,7 @@ class RoboterOperation(qtc.QObject):
 
 
 
-    def populate_blue_coordinates(self, )
+    # def populate_blue_coordinates(self, )
 
 
 
