@@ -32,6 +32,9 @@ class RoboterOperation(qtc.QObject):
         message=message  #warum nochmal assignen?
         tn_robo.write(message)
         print("send message")
+        tn_robo.read_until(b"test", 1)
+        print("read message")
+
         if message == "MOV\r\n".encode("ascii"): 
             tn_robo.read_until("Doesntmatter".encode("ascii"), 0.5) #Workaround, um Datenleitung zu resetten (kann eventuell weggelassen werden)
         else:
