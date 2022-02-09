@@ -590,7 +590,7 @@
        <double>1000.000000000000000</double>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_17">
+     <widget class="QPushButton" name="setup_set_start_point">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -624,7 +624,7 @@
      <zorder>setup_blue_z</zorder>
      <zorder>setup_red_r</zorder>
      <zorder>setup_blue_r</zorder>
-     <zorder>pushButton_17</zorder>
+     <zorder>setup_set_start_point</zorder>
      <zorder>setup_blue_x</zorder>
     </widget>
     <widget class="QGroupBox" name="groupBox_10">
