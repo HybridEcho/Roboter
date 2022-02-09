@@ -28,11 +28,14 @@ class RoboterOperation(qtc.QObject):
             Ethernet adress
         message : ASCII
             Command for roboter
+        end_message: ASCII
+            Message to end conversation
         """
         tn_robo.write(f"{message}\r\n".encode("ascii"))
         print("send message")
-        tn_robo.read_until(f"{end_message}\r\n".encode("ascii"), 100)
+        reply = tn_robo.read_until(f"{end_message}\r\n".encode("ascii"), 10)
         print("read message")
+        return reply
 
     def roboter_feedback(self, tn_robo, exp_feedback_ascii):
         """Receives feedback of roboter controller via ethernet
