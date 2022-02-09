@@ -67,13 +67,9 @@ class MainWindow(MW_Base, MW_Ui):
 
 
     def servo_blue_on(self):
-        tn_robo, message = RoboterOperation.servo_blue_on(self)
-        RoboterOperation.dev_roboter_message(self, tn_robo, message)
-        RoboterOperation.roboter_message(self, network_parameters.tnblue, "C:R:SERVO_ON\r\n".encode("ascii"))
+        RoboterOperation.roboter_message(self, network_parameters.tnblue, "C:R:SERVO_ON")
     
     def servo_blue_off(self):
-        tn_robo, message = RoboterOperation.servo_blue_off(self)
-        RoboterOperation.dev_roboter_message(self, tn_robo, message)
         RoboterOperation.roboter_message(self, network_parameters.tnblue, "C:R:SERVO_OFF\r\n".encode("ascii"))
 
     def servo_red_on(self):

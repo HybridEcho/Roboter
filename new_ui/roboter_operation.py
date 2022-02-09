@@ -29,16 +29,10 @@ class RoboterOperation(qtc.QObject):
         message : ASCII
             Command for roboter
         """
-        message=message  #warum nochmal assignen?
-        tn_robo.write(message)
+        tn_robo.write(f"{message}\r\n".encode("ascii"))
         print("send message")
         tn_robo.read_until(b"test", 1)
         print("read message")
-
-        if message == "MOV\r\n".encode("ascii"): 
-            tn_robo.read_until("Doesntmatter".encode("ascii"), 0.5) #Workaround, um Datenleitung zu resetten (kann eventuell weggelassen werden)
-        else:
-            print(" ")
 
     def roboter_feedback(self, tn_robo, exp_feedback_ascii):
         """Receives feedback of roboter controller via ethernet
