@@ -19,7 +19,7 @@ class RoboterOperation(qtc.QObject):
         dev_feedback = tn_robo + "---" + dev_feedback_message
         return dev_feedback
 
-    def roboter_message(self, tn_robo, message):
+    def roboter_message(self, tn_robo, message, end_message):
         """Sends message to roboter controller via ethernet
 
         Parameters
@@ -31,7 +31,7 @@ class RoboterOperation(qtc.QObject):
         """
         tn_robo.write(f"{message}\r\n".encode("ascii"))
         print("send message")
-        tn_robo.read_until(b"test", 1)
+        tn_robo.read_until(f"{end_message}\r\n".encode("ascii"), 100)
         print("read message")
 
     def roboter_feedback(self, tn_robo, exp_feedback_ascii):

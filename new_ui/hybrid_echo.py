@@ -67,16 +67,16 @@ class MainWindow(MW_Base, MW_Ui):
 
 
     def servo_blue_on(self):
-        RoboterOperation.roboter_message(self, network_parameters.tnblue, "C:R:SERVO_ON")
+        RoboterOperation.roboter_message(self, network_parameters.tnblue, "C:R:SERVO_ON", "R:C:SERVO_ON")
     
     def servo_blue_off(self):
-        RoboterOperation.roboter_message(self, network_parameters.tnblue, "C:R:SERVO_OFF")
+        RoboterOperation.roboter_message(self, network_parameters.tnblue, "C:R:SERVO_OFF", "R:C:SERVO_OFF")
 
     def servo_red_on(self):
-        RoboterOperation.roboter_message(self, network_parameters.tnred, "C:R:SERVO_ON")
+        RoboterOperation.roboter_message(self, network_parameters.tnred, "C:R:SERVO_ON", "R:C:SERVO_ON")
 
     def servo_red_off(self):
-        RoboterOperation.roboter_message(self, network_parameters.tnred, "C:R:SERVO_OFF")
+        RoboterOperation.roboter_message(self, network_parameters.tnred, "C:R:SERVO_OFF", "R:C:SERVO_OFF")
         
     
     def set_start_point(self):
@@ -120,8 +120,9 @@ class MainWindow(MW_Base, MW_Ui):
         return coordinates_red
 
     def load_blue(self):
-        tn_robo, message = RoboterOperation.get_position_blue(self)
-        RoboterOperation.dev_roboter_message(self, tn_robo, message)
+        RoboterOperation.roboter_message(self, network_parameters.tnred, "C:R:CURRENT_POSITION")
+
+
 
         robo_message = "121.00 125.00 320.00 50.00" #muss ersetzt werden
         
