@@ -38,18 +38,19 @@ class MainWindow(MW_Base, MW_Ui):
 
         ## setup ##
 
-        # self.setup_servo_blue_on.clicked.connect(self.roboter_operation.servo_blue_on)
-        # self.setup_servo_blue_off.clicked.connect(self.roboter_operation.servo_blue_off)
+        self.setup_servo_blue_on.clicked.connect(self.servo_blue_on)
+        self.setup_servo_blue_off.clicked.connect(self.servo_blue_off)
         
-        # self.setup_servo_red_on.clicked.connect(self.roboter_operation.servo_red_on)
-        # self.setup_servo_red_off.clicked.connect(self.roboter_operation.servo_red_off)
+        self.setup_servo_red_on.clicked.connect(self.servo_red_on)
+        self.setup_servo_red_off.clicked.connect(self.servo_red_off)
 
-        self.setup_load_blue.clicked.connect(self.populate_coordinates_blue)
-        self.setup_load_red.clicked.connect(self.populate_coordinates_red)
+        self.setup_load_blue.clicked.connect(self.load_blue)
+        self.setup_load_red.clicked.connect(self.load_red)
 
-        self.setup_goto_blue.clicked.connect(self.read_coordinates_blue)
-        self.setup_goto_red.clicked.connect(self.read_coordinates_red)
+        self.setup_goto_blue.clicked.connect(self.goto_blue)
+        self.setup_goto_red.clicked.connect(self.goto_red)
 
+        self.setup_set_start_point.clicked.connect(self.set_start_point)
         
         ## rotation ##
 
@@ -66,28 +67,44 @@ class MainWindow(MW_Base, MW_Ui):
         self.show()
 
 
+
+    def servo_blue_on(self):
+        tn_robo, message = RoboterOperation.servo_blue_on(self)
+        RoboterOperation.dev_roboter_message(self, tn_robo, message)
     
+    def servo_blue_off(self):
+        tn_robo, message = RoboterOperation.servo_blue_off(self)
+        RoboterOperation.dev_roboter_message(self, tn_robo, message)
 
-    def test_method(self, nr):        
-        nr = RoboterOperation.callcalc()
-        RoboterOperation.printer(self, nr)
+    def servo_red_on(self):
+        tn_robo, message = RoboterOperation.servo_red_on(self)
+        RoboterOperation.dev_roboter_message(self, tn_robo, message)
+
+    def servo_red_off(self):
+        tn_robo, message = RoboterOperation.servo_red_off(self)
+        RoboterOperation.dev_roboter_message(self, tn_robo, message)
         
+    
+    def set_start_point(self):
+        global coordinates_blue, coordinates_red
+        coordinates_blue = self.read_coordinates_blue()
+        coordinates_red = self.read_coordinates_red()
 
-    def populate_coordinates_blue(self):
-        coordinates_blue = np.array([1.11, 2.22, 3.33, 4.44]) #ersetzen
+
+    def populate_coordinates_blue(self, coordinates_blue):
+        #coordinates_blue = np.array([1.11, 2.22, 3.33, 4.44]) #ersetzen
         self.setup_blue_x.setValue(coordinates_blue[0])
         self.setup_blue_y.setValue(coordinates_blue[1])
         self.setup_blue_z.setValue(coordinates_blue[2])
         self.setup_blue_r.setValue(coordinates_blue[3])
     
     def populate_coordinates_red(self, coordinates_red):
-        coordinates_red = np.array([1.11, 2.22, 3.33, 4.44]) #ersetzen
+        #coordinates_red = np.array([1.11, 2.22, 3.33, 4.44]) #ersetzen
         self.setup_red_x.setValue(coordinates_red[0])
         self.setup_red_y.setValue(coordinates_red[1])
         self.setup_red_z.setValue(coordinates_red[2])
         self.setup_red_r.setValue(coordinates_red[3])
 
-    
     
     def read_coordinates_blue(self):
         x = self.setup_blue_x.value()
@@ -108,13 +125,52 @@ class MainWindow(MW_Base, MW_Ui):
         coordinates_red = np.array([x, y, z, r])
         return coordinates_red
 
+    def load_blue(self):
+        tn_robo, message = RoboterOperation.get_position_blue(self)
+        RoboterOperation.dev_roboter_message(self, tn_robo, message)
+
+        robo_message = "121.00 125.00 320.00 50.00" #muss ersetzt werden
+        
+        coordinates_blue = RoboterOperation.message_parser(self, robo_message)
+        self.populate_coordinates_blue(coordinates_blue)
+
+    def load_red(self):
+        tn_robo, message = RoboterOperation.get_position_red(self)
+        RoboterOperation.dev_roboter_message(self, tn_robo, message)
+
+        robo_message = "121.00 125.00 320.00 50.00" #muss ersetzt werden
+        
+        coordinates_red = RoboterOperation.message_parser(self, robo_message)
+        self.populate_coordinates_red(coordinates_red)
+
+
+    def goto_blue(self):
+        tn_robo, message = RoboterOperation.set_position_blue(self)
+        RoboterOperation.dev_roboter_message(self, tn_robo, message)
+
+        coordinates_blue = self.read_coordinates_blue()
+
+        robo_message = RoboterOperation.message_assembler(self, coordinates_blue)
+
+        RoboterOperation.dev_roboter_message(self, tn_robo, robo_message)
+
+    
+    def goto_red(self):
+        tn_robo, message = RoboterOperation.set_position_red(self)
+        RoboterOperation.dev_roboter_message(self, tn_robo, message)
+
+        coordinates_red = self.read_coordinates_red()
+
+        robo_message = RoboterOperation.message_assembler(self, coordinates_red)
+
+        RoboterOperation.dev_roboter_message(self, tn_robo, robo_message)
+
+
+
     def rotation_calculation(self):
         angle_step_size = self.rotation_angle_step_size.value()
         total_rotation = self.rotation_total_rotation.value()
         #rotation_distance = self.rotation_distance.value()
-
-        coordinates_blue = self.read_coordinates_blue()
-        coordinates_red = self.read_coordinates_red()
 
         global calibration_rotation_dataframe
         calibration_rotation_dataframe = RoboterOperation.calibration_calculation(angle_step_size, total_rotation, coordinates_blue, coordinates_red)
