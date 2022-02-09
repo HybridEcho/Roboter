@@ -2,7 +2,7 @@ from PyQt5 import QtCore as qtc
 import time
 import numpy as np
 import pandas as pd
-#from parameter import network_parameters
+from parameter import network_parameters
 
 class RoboterOperation(qtc.QObject):
     def __init__(self):
@@ -19,54 +19,54 @@ class RoboterOperation(qtc.QObject):
         dev_feedback = tn_robo + "---" + dev_feedback_message
         return dev_feedback
 
-    # def roboter_message(self, tn_robo, message):
-    #     """Sends message to roboter controller via ethernet
+    def roboter_message(self, tn_robo, message):
+        """Sends message to roboter controller via ethernet
 
-    #     Parameters
-    #     ----------
-    #     tn_robo : Class with host adress
-    #         Ethernet adress
-    #     message : ASCII
-    #         Command for roboter
-    #     """
-    #     message=message  #warum nochmal assignen?
-    #     tn_robo.write(message)
-    #     print("send message")
-    #     if message == "MOV\r\n".encode("ascii"): 
-    #         tn_robo.read_until("Doesntmatter".encode("ascii"), 0.5) #Workaround, um Datenleitung zu resetten (kann eventuell weggelassen werden)
-    #     else:
-    #         print(" ")
+        Parameters
+        ----------
+        tn_robo : Class with host adress
+            Ethernet adress
+        message : ASCII
+            Command for roboter
+        """
+        message=message  #warum nochmal assignen?
+        tn_robo.write(message)
+        print("send message")
+        if message == "MOV\r\n".encode("ascii"): 
+            tn_robo.read_until("Doesntmatter".encode("ascii"), 0.5) #Workaround, um Datenleitung zu resetten (kann eventuell weggelassen werden)
+        else:
+            print(" ")
 
-    # def roboter_feedback(self, tn_robo, exp_feedback_ascii):
-    #     """Receives feedback of roboter controller via ethernet
+    def roboter_feedback(self, tn_robo, exp_feedback_ascii):
+        """Receives feedback of roboter controller via ethernet
 
-    #     Parameters
-    #     ----------
-    #     tn_robo : Class with host adress
-    #         Ethernet adress
-    #     exp_feedback_ascii : [type]
-    #         [description]
-    #     """
-    #     info_from_robo_ascii = tn_robo.read_until(exp_feedback_ascii, 10.0) #10 Sekunden Wartezeit
-    #     info_from_robo = info_from_robo_ascii.decode("ascii")
-    #     info_from_robo = str(info_from_robo)
-    #     exp_feedback = exp_feedback_ascii.decode("ascii")
-    #     exp_feedback =str(exp_feedback)
-    #     if exp_feedback not in info_from_robo:
-    #         print("Error-Schleife")
-    #         print(info_from_robo)
-    #         error = tn_robo.read_until("doesntmatter".encode("ascii"), 3.0) #Workaround, auf Fehler warten
-    #         print(error)
-    #         return error
-    #     elif "P" in info_from_robo:
-    #         print("P-Schleife")
-    #         message_from_robo = tn_robo.read_until("\n".encode("ascii"), 2.0) 
-    #         message_from_robo = message_from_robo.decode("ascii")
-    #         message_from_robo = message_from_robo.strip("\n""\r")
-    #         print(message_from_robo)
-    #     elif "WRONG" in info_from_robo:
-    #         print(info_from_robo)
-    #         return info_from_robo
+        Parameters
+        ----------
+        tn_robo : Class with host adress
+            Ethernet adress
+        exp_feedback_ascii : [type]
+            [description]
+        """
+        info_from_robo_ascii = tn_robo.read_until(exp_feedback_ascii, 10.0) #10 Sekunden Wartezeit
+        info_from_robo = info_from_robo_ascii.decode("ascii")
+        info_from_robo = str(info_from_robo)
+        exp_feedback = exp_feedback_ascii.decode("ascii")
+        exp_feedback =str(exp_feedback)
+        if exp_feedback not in info_from_robo:
+            print("Error-Schleife")
+            print(info_from_robo)
+            error = tn_robo.read_until("doesntmatter".encode("ascii"), 3.0) #Workaround, auf Fehler warten
+            print(error)
+            return error
+        elif "P" in info_from_robo:
+            print("P-Schleife")
+            message_from_robo = tn_robo.read_until("\n".encode("ascii"), 2.0) 
+            message_from_robo = message_from_robo.decode("ascii")
+            message_from_robo = message_from_robo.strip("\n""\r")
+            print(message_from_robo)
+        elif "WRONG" in info_from_robo:
+            print(info_from_robo)
+            return info_from_robo
 
     def measurement_execution(self, dataframe):
         for i in dataframe.index:

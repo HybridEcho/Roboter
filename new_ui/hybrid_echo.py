@@ -1,4 +1,5 @@
 #Import packages
+from inspect import Parameter
 import sys
 import os
 import numpy as np
@@ -8,6 +9,7 @@ from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
 from PyQt5 import uic
 from roboter_operation import RoboterOperation
+from parameter import network_parameters
 #from pxi_operation import PXIOperation
 
 
@@ -30,10 +32,6 @@ class MainWindow(MW_Base, MW_Ui):
         ##################
         # Connect Events #
         ##################
-
-        #self.control_play.clicked.connect(self.roboter_operation.save_status)
-        #self.control_stop.clicked.connect(self.pxi_operation.status)
-
 
 
         ## setup ##
@@ -71,6 +69,7 @@ class MainWindow(MW_Base, MW_Ui):
     def servo_blue_on(self):
         tn_robo, message = RoboterOperation.servo_blue_on(self)
         RoboterOperation.dev_roboter_message(self, tn_robo, message)
+        RoboterOperation.roboter_message(self, network_parameters.tnblue, "C:R:SERVO_ON")
     
     def servo_blue_off(self):
         tn_robo, message = RoboterOperation.servo_blue_off(self)
