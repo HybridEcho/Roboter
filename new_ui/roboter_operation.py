@@ -82,10 +82,10 @@ class RoboterOperation(qtc.QObject):
 
         num_values =  re.findall(r'[-+]?(?:\d*\.\d+|\d+)', data_str_split) 
 
-        x = num_values[0]
-        y = num_values[1]
-        z = num_values[2]
-        r = num_values[3]
+        x = float(num_values[0])
+        y = float(num_values[1])
+        z = float(num_values[2])
+        r = float(num_values[3])
 
         coordinates = [x, y, z, r]
 
