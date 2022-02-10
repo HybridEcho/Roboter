@@ -32,7 +32,6 @@ class RoboterOperation(qtc.QObject):
         end_message: ASCII
             Message to end conversation
         """
-        tn_robo.read_until()
         tn_robo.write(f"{message}\r\n".encode("ascii"))
         print("send message")
         reply = tn_robo.read_until(f"{end_message}\r\n".encode("ascii"), 10)
@@ -88,7 +87,7 @@ class RoboterOperation(qtc.QObject):
         z = num_values[2]
         r = num_values[3]
 
-        coordinates = np.array([x, y, z, r])
+        coordinates = [x, y, z, r]
 
         return coordinates
 
