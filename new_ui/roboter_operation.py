@@ -3,6 +3,7 @@ import time
 import numpy as np
 import pandas as pd
 from parameter import network_parameters
+import re
 
 class RoboterOperation(qtc.QObject):
     def __init__(self):
@@ -31,6 +32,7 @@ class RoboterOperation(qtc.QObject):
         end_message: ASCII
             Message to end conversation
         """
+        tn_robo.read_until()
         tn_robo.write(f"{message}\r\n".encode("ascii"))
         print("send message")
         reply = tn_robo.read_until(f"{end_message}\r\n".encode("ascii"), 10)
@@ -74,10 +76,17 @@ class RoboterOperation(qtc.QObject):
         
 
     def message_parser(self, message):
-        x = float(message[0:6])
-        y = float(message[7:13])
-        z = float(message[14:20])
-        r = float(message[21:27])
+        
+        message_str = message.decode() # convert byte to string
+
+        data_str_split = message_str.split('P11')[1] # split str by "P11"
+
+        num_values =  re.findall(r'[-+]?(?:\d*\.\d+|\d+)', data_str_split) 
+
+        x = num_values[0]
+        y = num_values[1]
+        z = num_values[2]
+        r = num_values[3]
 
         coordinates = np.array([x, y, z, r])
 
