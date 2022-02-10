@@ -120,7 +120,7 @@ class MainWindow(MW_Base, MW_Ui):
         return coordinates_red
 
     def load_blue(self):
-        robo_message = RoboterOperation.roboter_message(self, network_parameters.tnred, "C:R:CURRENT_POSITION", "R:C:CURRENT_POSITION")
+        robo_message = RoboterOperation.roboter_message(self, network_parameters.tnblue, "C:R:CURRENT_POSITION", "R:C:CURRENT_POSITION")
         coordinates_blue = RoboterOperation.message_parser(self, robo_message)
         self.populate_coordinates_blue(coordinates_blue)
 
