@@ -33,10 +33,20 @@ class RoboterOperation(qtc.QObject):
             Message to end conversation
         """
         tn_robo.write(f"{message}\r\n".encode("ascii"))
-        print("send message")
+        print("message sent")
         reply = tn_robo.read_until(f"{end_message}\r\n".encode("ascii"), 10)
         print("read message")
         return reply
+
+    def roboter_message_move(self, tn_robo, message, coordinates_message, end_message):
+        tn_robo.write(f"{message}\r\n".encode("ascii"))
+        print("message sent")
+        tn_robo.write(("P1 = ".encode("ascii") + coordinates_message.encode("ascii") + " 0 0 2\r\n".encode("ascii")))
+        print("coordinates message sent")
+        reply = tn_robo.read_until(f"{end_message}\r\n".encode("ascii"), 10)
+        print("read message")
+        return reply
+        
 
     def roboter_feedback(self, tn_robo, exp_feedback_ascii):
         """Receives feedback of roboter controller via ethernet
@@ -97,8 +107,8 @@ class RoboterOperation(qtc.QObject):
         y = coordinates[1]
         z = coordinates[2]
         r = coordinates[3]
-        message = str(x) + " " + str(y) + " " + str(z) + " " + str(r)
-        return message
+        coordinates_message = str(x) + " " + str(y) + " " + str(z) + " " + str(r)
+        return coordinates_message
 
 
     def calibration_calculation(angle_step_size, total_rotation, start_position_blue, start_position_red):
@@ -118,36 +128,6 @@ class RoboterOperation(qtc.QObject):
     def save_to_csv(self, dataframe, filename):
         dataframe.to_csv(filename)
 
-
-    def servo_blue_on(self):
-        message = "C:R:SERVO_ON"
-        tn_robo = "Robo Blue"
-        return tn_robo, message
-    
-    def servo_blue_off(self):
-        message = "C:R:SERVO_OFF"
-        tn_robo = "Robo Blue"
-        return tn_robo, message
-
-    def servo_red_on(self):
-        message = "C:R:SERVO_ON"
-        tn_robo = "Robo Red"
-        return tn_robo, message
-    
-    def servo_red_off(self):
-        message = "C:R:SERVO_OFF"
-        tn_robo = "Robo Red"
-        return tn_robo, message
-
-    def get_position_blue(self):
-        message = "C:R:CURRENT_POSITION"
-        tn_robo = "Robo Blue"
-        return tn_robo, message
-
-    def get_position_red(self):
-        message = "C:R:CURRENT_POSITION"
-        tn_robo = "Robo Red"
-        return tn_robo, message
 
     def set_position_blue(self):
         message = "C:R:GOTO_POSITION"

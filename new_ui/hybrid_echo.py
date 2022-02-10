@@ -13,8 +13,8 @@ from parameter import network_parameters
 #from pxi_operation import PXIOperation
 
 
-#os.chdir("C:/Users/Moritz/Documents/Code/Roboter/new_ui") #für Windows notwendig
-os.chdir("/Users/julian/Documents/HybridEcho/Roboter/new_ui")
+os.chdir("C:/Users/Moritz/Documents/Code/Roboter/new_ui") #für Windows
+#os.chdir("/Users/julian/Documents/HybridEcho/Roboter/new_ui") #für macOS
 MW_Ui, MW_Base = uic.loadUiType("gui_view.ui")
 
 
@@ -106,7 +106,7 @@ class MainWindow(MW_Base, MW_Ui):
         z = self.setup_blue_z.value()
         r = self.setup_blue_r.value()
 
-        coordinates_blue = np.array([x, y, z, r])
+        coordinates_blue = [x, y, z, r]
         return coordinates_blue
 
     
@@ -116,7 +116,7 @@ class MainWindow(MW_Base, MW_Ui):
         z = self.setup_red_z.value()
         r = self.setup_red_r.value()
 
-        coordinates_red = np.array([x, y, z, r])
+        coordinates_red = [x, y, z, r]
         return coordinates_red
 
     def load_blue(self):
@@ -131,14 +131,11 @@ class MainWindow(MW_Base, MW_Ui):
 
 
     def goto_blue(self):
-        tn_robo, message = RoboterOperation.set_position_blue(self)
-        RoboterOperation.dev_roboter_message(self, tn_robo, message)
-
         coordinates_blue = self.read_coordinates_blue()
-
-        robo_message = RoboterOperation.message_assembler(self, coordinates_blue)
-
-        RoboterOperation.dev_roboter_message(self, tn_robo, robo_message)
+        coordinates_message = RoboterOperation.message_assembler(self, coordinates_blue)
+        robo_message = RoboterOperation.roboter_message_move(self, network_parameters.tnblue, "C:R:GOTO_POSITION", coordinates_message, "R:C:GOTO_POSITION")
+        coordinates_blue = RoboterOperation.message_parser(self, robo_message)
+        self.populate_coordinates_blue(coordinates_blue)
 
     
     def goto_red(self):
@@ -163,7 +160,7 @@ class MainWindow(MW_Base, MW_Ui):
 
     
     def save_csv(self):
-        filename = "/Users/julian/Documents/HybridEcho/Roboter/new_ui/test.csv"
+        filename = "C:/Users/Moritz/Documents/Code/Roboter/new_ui/test.csv"
         RoboterOperation.save_to_csv(self, calibration_rotation_dataframe, filename)
 
 
