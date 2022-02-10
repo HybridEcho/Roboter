@@ -139,15 +139,11 @@ class MainWindow(MW_Base, MW_Ui):
 
     
     def goto_red(self):
-        tn_robo, message = RoboterOperation.set_position_red(self)
-        RoboterOperation.dev_roboter_message(self, tn_robo, message)
-
         coordinates_red = self.read_coordinates_red()
-
-        robo_message = RoboterOperation.message_assembler(self, coordinates_red)
-
-        RoboterOperation.dev_roboter_message(self, tn_robo, robo_message)
-
+        coordinates_message = RoboterOperation.message_assembler(self, coordinates_red)
+        robo_message = RoboterOperation.roboter_message_move(self, network_parameters.tnred, "C:R:GOTO_POSITION", coordinates_message, "R:C:GOTO_POSITION")
+        coordinates_red = RoboterOperation.message_parser(self, robo_message)
+        self.populate_coordinates_red(coordinates_red)
 
 
     def rotation_calculation(self):

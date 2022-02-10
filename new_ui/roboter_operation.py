@@ -42,9 +42,6 @@ class RoboterOperation(qtc.QObject):
         tn_robo.write(f"{message}\r\n".encode("ascii"))
         print("message sent")
         movement_message = "P1 = ".encode("ascii") + coordinates_message.encode("ascii") + " 0 0 2\r\n".encode("ascii")
-        movement_message_2 = "P1 = " + coordinates_message + " 0 0 2\r\n"
-        movement_message_2_ascii = movement_message_2.encode("ascii")
-
         tn_robo.write(movement_message)
         print("coordinates message sent")
         reply = tn_robo.read_until(f"{end_message}\r\n".encode("ascii"), 10)
