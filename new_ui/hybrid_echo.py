@@ -125,11 +125,7 @@ class MainWindow(MW_Base, MW_Ui):
         self.populate_coordinates_blue(coordinates_blue)
 
     def load_red(self):
-        tn_robo, message = RoboterOperation.get_position_red(self)
-        RoboterOperation.dev_roboter_message(self, tn_robo, message)
-
-        robo_message = "121.00 125.00 320.00 50.00" #muss ersetzt werden
-        
+        robo_message = RoboterOperation.roboter_message(self, network_parameters.tnred, "C:R:CURRENT_POSITION", "R:C:CURRENT_POSITION")
         coordinates_red = RoboterOperation.message_parser(self, robo_message)
         self.populate_coordinates_red(coordinates_red)
 
