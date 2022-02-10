@@ -125,7 +125,6 @@ class RoboterOperation(qtc.QObject):
         return calibration_dataframe
 
 
-
     def save_to_csv(self, dataframe, filename):
         dataframe.to_csv(filename)
 

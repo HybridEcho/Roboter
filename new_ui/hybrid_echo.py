@@ -57,6 +57,7 @@ class MainWindow(MW_Base, MW_Ui):
 
         ## checklist ##
         self.checklist_save_csv.clicked.connect(self.save_csv)
+        self.checklist_start_measurement.clicked.connect(self.start_measurement)
 
 
         ##################
@@ -158,6 +159,26 @@ class MainWindow(MW_Base, MW_Ui):
     def save_csv(self):
         filename = "C:/Users/Moritz/Documents/Code/Roboter/new_ui/test.csv"
         RoboterOperation.save_to_csv(self, calibration_rotation_dataframe, filename)
+
+    def start_measurement(self):
+        calibration_rotation_blue = calibration_rotation_dataframe[["Blue_X","Blue_Y","Blue_Z", "Blue_R"]].to_numpy()
+        calibration_rotation_red = calibration_rotation_dataframe[["Red_X","Red_Y","Red_Z", "Red_R"]].to_numpy()
+
+        coordinates_message_red = RoboterOperation.message_assembler(self, calibration_rotation_red[0])
+        robo_message_red = RoboterOperation.roboter_message_move(self, network_parameters.tnred, "C:R:GOTO_POSITION", coordinates_message_red, "R:C:GOTO_POSITION")
+        coordinates_red = RoboterOperation.message_parser(self, robo_message_red)
+        self.populate_coordinates_red(coordinates_red)
+
+        for i in calibration_rotation_blue:
+            coordinates_message_blue = RoboterOperation.message_assembler(self, calibration_rotation_blue[i])
+            robo_message_blue = RoboterOperation.roboter_message_move(self, network_parameters.tnblue, "C:R:GOTO_POSITION", coordinates_message_blue, "R:C:GOTO_POSITION")
+            coordinates_blue = RoboterOperation.message_parser(self, robo_message_blue)
+            self.populate_coordinates_blue(coordinates_blue)
+        
+        print("finished measurement")
+
+
+
 
 
 if __name__ == '__main__':
