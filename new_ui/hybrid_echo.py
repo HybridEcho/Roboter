@@ -151,7 +151,7 @@ class MainWindow(MW_Base, MW_Ui):
     def rotation_calculation(self):
         angle_step_size = self.rotation_angle_step_size.value()
         total_rotation = self.rotation_total_rotation.value()
-        #rotation_distance = self.rotation_distance.value()
+        rotation_distance = self.rotation_distance.value()
 
         global calibration_rotation_dataframe
         calibration_rotation_dataframe = RoboterOperation.calibration_calculation(angle_step_size, total_rotation, coordinates_blue, coordinates_red)
@@ -162,7 +162,13 @@ class MainWindow(MW_Base, MW_Ui):
         RoboterOperation.save_to_csv(self, calibration_rotation_dataframe, filename)
 
     def start_measurement(self):
+        angle_step_size = self.rotation_angle_step_size.value() #in Funktion integrieren
+        total_rotation = self.rotation_total_rotation.value() #in Funktion integrieren
+        rotation_distance = self.rotation_distance.value() #in Funktion integrieren
+
         PXIOperation.UDP_connection_PXI(self, udp_messages.message_PXI_start + "Test", udp_messages.response_PXI_start  + "Test")
+        PXIOperation.UDP_connection_PXI(self,udp_messages.message_PXI_Log_parameter +f"Angle Step [deg] {angle_step_size} \n Total Angle Range [deg] {total_rotation} \n Rotation Distance [cm] {rotation_distance} \n" , udp_messages.response_PXI_Log_parameter)
+        
         calibration_rotation_blue = calibration_rotation_dataframe[["Blue_X","Blue_Y","Blue_Z", "Blue_R"]].to_numpy()
         calibration_rotation_red = calibration_rotation_dataframe[["Red_X","Red_Y","Red_Z", "Red_R"]].to_numpy()
 
@@ -177,7 +183,7 @@ class MainWindow(MW_Base, MW_Ui):
             coordinates_blue = RoboterOperation.message_parser(self, robo_message_blue)
             self.populate_coordinates_blue(coordinates_blue)
             PXIOperation.UDP_connection_PXI(self,udp_messages.message_PXI_reached_position, udp_messages.response_PXI_reached_position)
-            PXIOperation.UDP_connection_PXI(self,udp_messages.message_PXI_Log +f"COORDLOG:Coordinates Blue (X,Y,Z,R): {coordinates_message_blue}" + "\t" + f"Coordinates Red (X,Y,Z,R): {coordinates_message_red}" , udp_messages.response_PXI_Log)
+            PXIOperation.UDP_connection_PXI(self,udp_messages.message_PXI_Log_coord +f"Coordinates Blue (X,Y,Z,R): {coordinates_message_blue}" + "\t" + f"Coordinates Red (X,Y,Z,R): {coordinates_message_red} \n" , udp_messages.response_PXI_Log_coord)
             self.progressBar.setValue(((i+1)*100)/len(calibration_rotation_dataframe))
         
         print("finished measurement")
