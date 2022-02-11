@@ -170,7 +170,7 @@ class MainWindow(MW_Base, MW_Ui):
         self.populate_coordinates_red(coordinates_red)
 
         for i in calibration_rotation_blue:
-            coordinates_message_blue = RoboterOperation.message_assembler(self, calibration_rotation_blue[i])
+            coordinates_message_blue = RoboterOperation.message_assembler(self, i)
             robo_message_blue = RoboterOperation.roboter_message_move(self, network_parameters.tnblue, "C:R:GOTO_POSITION", coordinates_message_blue, "R:C:GOTO_POSITION")
             coordinates_blue = RoboterOperation.message_parser(self, robo_message_blue)
             self.populate_coordinates_blue(coordinates_blue)
