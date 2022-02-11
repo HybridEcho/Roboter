@@ -10,7 +10,8 @@ from PyQt5 import QtCore as qtc
 from PyQt5 import uic
 from roboter_operation import RoboterOperation
 from parameter import network_parameters
-#from pxi_operation import PXIOperation
+from parameter import udp_messages
+from pxi_operation import PXIOperation
 
 
 os.chdir("C:/Users/Moritz/Documents/Code/Roboter/new_ui") #für Windows
@@ -161,6 +162,7 @@ class MainWindow(MW_Base, MW_Ui):
         RoboterOperation.save_to_csv(self, calibration_rotation_dataframe, filename)
 
     def start_measurement(self):
+        PXIOperation.UDP_connection_PXI(self, udp_messages.message_PXI_start + "Test", udp_messages.response_PXI_start  + "Test")
         calibration_rotation_blue = calibration_rotation_dataframe[["Blue_X","Blue_Y","Blue_Z", "Blue_R"]].to_numpy()
         calibration_rotation_red = calibration_rotation_dataframe[["Red_X","Red_Y","Red_Z", "Red_R"]].to_numpy()
 
@@ -174,6 +176,7 @@ class MainWindow(MW_Base, MW_Ui):
             robo_message_blue = RoboterOperation.roboter_message_move(self, network_parameters.tnblue, "C:R:GOTO_POSITION", coordinates_message_blue, "R:C:GOTO_POSITION")
             coordinates_blue = RoboterOperation.message_parser(self, robo_message_blue)
             self.populate_coordinates_blue(coordinates_blue)
+            PXIOperation.UDP_connection_PXI(self, )
             self.progressBar.setValue(((i+1)*100)/len(calibration_rotation_dataframe))
         
         print("finished measurement")
