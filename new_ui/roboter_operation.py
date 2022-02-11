@@ -86,7 +86,7 @@ class RoboterOperation(qtc.QObject):
         
 
     def message_parser(self, message):
-        
+        print(message)
         message_str = message.decode() # convert byte to string
 
         data_str_split = message_str.split('P11')[1] # split str by "P11"
@@ -117,7 +117,7 @@ class RoboterOperation(qtc.QObject):
         start_position_calibration_red = start_position_red
         start_position_calibration_blue[3] = start_position_calibration_blue[3] - total_rotation/2
         number_of_steps = total_rotation / angle_step_size
-        step_blue = np.arange(0, number_of_steps+1, angle_step_size)
+        step_blue = np.arange(0, total_rotation+1, angle_step_size)
         calibration_array_blue = np.column_stack((start_position_calibration_blue[0] + step_blue*0, start_position_calibration_blue[1] + step_blue*0, start_position_calibration_blue[2] + step_blue*0, np.round(start_position_calibration_blue[3] + step_blue, 3)))
         calibration_array_red = np.tile(start_position_calibration_red, (int(number_of_steps+1), 1))
         calibration_array = np.concatenate((calibration_array_blue, calibration_array_red), axis=1)
