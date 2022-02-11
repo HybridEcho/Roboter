@@ -176,7 +176,7 @@ class MainWindow(MW_Base, MW_Ui):
             robo_message_blue = RoboterOperation.roboter_message_move(self, network_parameters.tnblue, "C:R:GOTO_POSITION", coordinates_message_blue, "R:C:GOTO_POSITION")
             coordinates_blue = RoboterOperation.message_parser(self, robo_message_blue)
             self.populate_coordinates_blue(coordinates_blue)
-            PXIOperation.UDP_connection_PXI(self, )
+            PXIOperation.UDP_connection_PXI(self,udp_messages.message_PXI_reached_position, udp_messages.response_PXI_reached_position)
             self.progressBar.setValue(((i+1)*100)/len(calibration_rotation_dataframe))
         
         print("finished measurement")
