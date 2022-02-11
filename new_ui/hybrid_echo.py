@@ -177,7 +177,7 @@ class MainWindow(MW_Base, MW_Ui):
             coordinates_blue = RoboterOperation.message_parser(self, robo_message_blue)
             self.populate_coordinates_blue(coordinates_blue)
             PXIOperation.UDP_connection_PXI(self,udp_messages.message_PXI_reached_position, udp_messages.response_PXI_reached_position)
-            PXIOperation.UDP_connection_PXI(self,udp_messages.message_PXI_Log + f"Coordinates Blue (X,Y,Z,R): {coordinates_message_blue}" + "\t" + f"Coordinates Red (X,Y,Z,R): {coordinates_message_red}" , udp_messages.response_PXI_Log)
+            PXIOperation.UDP_connection_PXI(self,udp_messages.message_PXI_Log +f"COORDLOG:Coordinates Blue (X,Y,Z,R): {coordinates_message_blue}" + "\t" + f"Coordinates Red (X,Y,Z,R): {coordinates_message_red}" , udp_messages.response_PXI_Log)
             self.progressBar.setValue(((i+1)*100)/len(calibration_rotation_dataframe))
         
         print("finished measurement")
