@@ -33,6 +33,7 @@ class RoboterOperation(qtc.QObject):
             Message to end conversation
         """
         tn_robo.write(f"{message}\r\n".encode("ascii"))
+        print(message)        
         print("message sent")
         reply = tn_robo.read_until(f"{end_message}\r\n".encode("ascii"), 10)
         print("read message")
@@ -40,9 +41,11 @@ class RoboterOperation(qtc.QObject):
 
     def roboter_message_move(self, tn_robo, message, coordinates_message, end_message):
         tn_robo.write(f"{message}\r\n".encode("ascii"))
+        print(message)
         print("message sent")
         movement_message = "P1 = ".encode("ascii") + coordinates_message.encode("ascii") + " 0 0 2\r\n".encode("ascii")
         tn_robo.write(movement_message)
+        print(movement_message)
         print("coordinates message sent")
         reply = tn_robo.read_until(f"{end_message}\r\n".encode("ascii"), 10)
         print("read message")
@@ -108,7 +111,7 @@ class RoboterOperation(qtc.QObject):
         y = coordinates[1]
         z = coordinates[2]
         r = coordinates[3]
-        coordinates_message = str(x) + " " + str(y) + " " + str(z) + " " + str(r)
+        coordinates_message = f"{x:.2f}" + " " + f"{y:.2f}" + " " + f"{z:.2f}" + " " + f"{r:.2f}"
         return coordinates_message
 
 
@@ -117,9 +120,12 @@ class RoboterOperation(qtc.QObject):
         start_position_calibration_red = start_position_red
         start_position_calibration_blue[3] = start_position_calibration_blue[3] - total_rotation/2
         number_of_steps = total_rotation / angle_step_size
-        step_blue = np.arange(0, total_rotation+1, angle_step_size)
-        calibration_array_blue = np.column_stack((start_position_calibration_blue[0] + step_blue*0, start_position_calibration_blue[1] + step_blue*0, start_position_calibration_blue[2] + step_blue*0, np.round(start_position_calibration_blue[3] + step_blue, 3)))
+        step_blue = np.arange(0, total_rotation+angle_step_size, angle_step_size)
+#        calibration_array_blue = np.column_stack((start_position_calibration_blue[0] + step_blue*0, start_position_calibration_blue[1] + step_blue*0, start_position_calibration_blue[2] + step_blue*0, np.round(start_position_calibration_blue[3] + step_blue, 3)))
+        calibration_array_blue = np.column_stack((start_position_calibration_blue[0] + step_blue*0, start_position_calibration_blue[1] + step_blue*0, start_position_calibration_blue[2] + step_blue*0, start_position_calibration_blue[3] + step_blue))
         calibration_array_red = np.tile(start_position_calibration_red, (int(number_of_steps+1), 1))
+        print(calibration_array_blue)
+        print(calibration_array_red)
         calibration_array = np.concatenate((calibration_array_blue, calibration_array_red), axis=1)
         calibration_dataframe = pd.DataFrame(calibration_array, columns = ["Blue_X","Blue_Y","Blue_Z", "Blue_R", "Red_X","Red_Y","Red_Z", "Red_R"])
         return calibration_dataframe

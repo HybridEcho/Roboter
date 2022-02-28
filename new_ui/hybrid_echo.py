@@ -12,6 +12,7 @@ from roboter_operation import RoboterOperation
 from parameter import network_parameters
 from parameter import udp_messages
 from pxi_operation import PXIOperation
+import time
 
 
 os.chdir("C:/Users/Moritz/Documents/Code/Roboter/new_ui") #für Windows
@@ -182,6 +183,7 @@ class MainWindow(MW_Base, MW_Ui):
             robo_message_blue = RoboterOperation.roboter_message_move(self, network_parameters.tnblue, "C:R:GOTO_POSITION", coordinates_message_blue, "R:C:GOTO_POSITION")
             coordinates_blue = RoboterOperation.message_parser(self, robo_message_blue)
             self.populate_coordinates_blue(coordinates_blue)
+            time.sleep(0.2)
             PXIOperation.UDP_connection_PXI(self,udp_messages.message_PXI_reached_position, udp_messages.response_PXI_reached_position)
             PXIOperation.UDP_connection_PXI(self,udp_messages.message_PXI_Log_coord +f"Coordinates Blue (X,Y,Z,R): {coordinates_message_blue}" + "\t" + f"Coordinates Red (X,Y,Z,R): {coordinates_message_red} \n" , udp_messages.response_PXI_Log_coord)
             self.progressBar.setValue(((i+1)*100)/len(calibration_rotation_dataframe))
