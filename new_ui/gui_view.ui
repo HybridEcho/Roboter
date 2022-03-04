@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>972</width>
-    <height>566</height>
+    <height>756</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,1236 +19,1040 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QTabWidget" name="tab_widget">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>971</width>
-     <height>571</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <strikeout>false</strikeout>
-    </font>
-   </property>
-   <property name="cursor">
-    <cursorShape>ArrowCursor</cursorShape>
-   </property>
-   <property name="tabPosition">
-    <enum>QTabWidget::North</enum>
-   </property>
-   <property name="currentIndex">
-    <number>0</number>
-   </property>
-   <property name="usesScrollButtons">
-    <bool>false</bool>
-   </property>
-   <property name="tabBarAutoHide">
-    <bool>false</bool>
-   </property>
-   <widget class="QWidget" name="tab_planning">
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <attribute name="title">
-     <string>Planning</string>
-    </attribute>
-    <widget class="QTabWidget" name="tabWidget_2">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>330</y>
-       <width>931</width>
-       <height>211</height>
-      </rect>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QTabWidget" name="tab_widget">
+     <property name="font">
+      <font>
+       <strikeout>false</strikeout>
+      </font>
+     </property>
+     <property name="cursor">
+      <cursorShape>ArrowCursor</cursorShape>
+     </property>
+     <property name="tabPosition">
+      <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tab_7">
+     <property name="usesScrollButtons">
+      <bool>false</bool>
+     </property>
+     <property name="tabBarAutoHide">
+      <bool>false</bool>
+     </property>
+     <widget class="QWidget" name="tab_planning">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <attribute name="title">
-       <string>Calibration</string>
+       <string>Planning</string>
       </attribute>
-      <widget class="QGroupBox" name="group_rotation">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="group_setup">
+         <property name="title">
+          <string>Setup</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="3">
+           <widget class="QLabel" name="label_10">
+            <property name="text">
+             <string>           x</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QLabel" name="label_11">
+            <property name="text">
+             <string>           y</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QLabel" name="label_12">
+            <property name="text">
+             <string>           z</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="6">
+           <widget class="QLabel" name="label_13">
+            <property name="text">
+             <string>           r</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_22">
+            <property name="text">
+             <string>Servo Blue</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="setup_servo_blue_on">
+            <property name="text">
+             <string>ON</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QPushButton" name="setup_servo_blue_off">
+            <property name="text">
+             <string>OFF</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QDoubleSpinBox" name="setup_blue_x">
+            <property name="suffix">
+             <string> mm</string>
+            </property>
+            <property name="minimum">
+             <double>-1000.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QDoubleSpinBox" name="setup_blue_y">
+            <property name="suffix">
+             <string> mm</string>
+            </property>
+            <property name="minimum">
+             <double>-1000.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="5">
+           <widget class="QDoubleSpinBox" name="setup_blue_z">
+            <property name="suffix">
+             <string> mm</string>
+            </property>
+            <property name="minimum">
+             <double>0.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="6">
+           <widget class="QDoubleSpinBox" name="setup_blue_r">
+            <property name="suffix">
+             <string> mm</string>
+            </property>
+            <property name="minimum">
+             <double>-1000.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="7">
+           <widget class="QPushButton" name="setup_load_blue">
+            <property name="text">
+             <string>Load</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="8">
+           <widget class="QPushButton" name="setup_goto_blue">
+            <property name="text">
+             <string>Go to</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_21">
+            <property name="text">
+             <string>Servo Red</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="setup_servo_red_on">
+            <property name="text">
+             <string>ON</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QPushButton" name="setup_servo_red_off">
+            <property name="text">
+             <string>OFF</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <widget class="QDoubleSpinBox" name="setup_red_x">
+            <property name="suffix">
+             <string> mm</string>
+            </property>
+            <property name="minimum">
+             <double>-1000.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="4">
+           <widget class="QDoubleSpinBox" name="setup_red_y">
+            <property name="suffix">
+             <string> mm</string>
+            </property>
+            <property name="minimum">
+             <double>-1000.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="5">
+           <widget class="QDoubleSpinBox" name="setup_red_z">
+            <property name="suffix">
+             <string> mm</string>
+            </property>
+            <property name="minimum">
+             <double>0.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="6">
+           <widget class="QDoubleSpinBox" name="setup_red_r">
+            <property name="suffix">
+             <string> mm</string>
+            </property>
+            <property name="minimum">
+             <double>-1000.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>1000.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="7">
+           <widget class="QPushButton" name="setup_load_red">
+            <property name="text">
+             <string>Load</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="8">
+           <widget class="QPushButton" name="setup_goto_red">
+            <property name="text">
+             <string>Go to</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="9">
+           <widget class="QPushButton" name="setup_set_start_point">
+            <property name="text">
+             <string>Set as start point</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+         <zorder>label_10</zorder>
+         <zorder>label_11</zorder>
+         <zorder>label_12</zorder>
+         <zorder>label_13</zorder>
+         <zorder>setup_load_blue</zorder>
+         <zorder>setup_goto_blue</zorder>
+         <zorder>setup_goto_red</zorder>
+         <zorder>setup_load_red</zorder>
+         <zorder>setup_servo_red_on</zorder>
+         <zorder>label_21</zorder>
+         <zorder>setup_servo_red_off</zorder>
+         <zorder>setup_servo_blue_on</zorder>
+         <zorder>label_22</zorder>
+         <zorder>setup_servo_blue_off</zorder>
+         <zorder>setup_red_x</zorder>
+         <zorder>setup_red_y</zorder>
+         <zorder>setup_blue_y</zorder>
+         <zorder>setup_red_z</zorder>
+         <zorder>setup_blue_z</zorder>
+         <zorder>setup_red_r</zorder>
+         <zorder>setup_blue_r</zorder>
+         <zorder>setup_set_start_point</zorder>
+         <zorder>setup_blue_x</zorder>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QGroupBox" name="group_documentation">
+         <property name="title">
+          <string>Documentation</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_15">
+            <property name="text">
+             <string>Water depth:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox">
+            <property name="suffix">
+             <string> cm</string>
+            </property>
+            <property name="decimals">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="label_16">
+            <property name="text">
+             <string>Model:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QComboBox" name="comboBox">
+            <item>
+             <property name="text">
+              <string>Suture</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tissue</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_17">
+            <property name="text">
+             <string>Transmitter:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="comboBox_2">
+            <item>
+             <property name="text">
+              <string>IKTS_PCB_V1</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>IKTS_PCB_V2</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="label_18">
+            <property name="text">
+             <string>Receiver:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QComboBox" name="comboBox_3">
+            <item>
+             <property name="text">
+              <string>IPMS_CMUT_V1</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>IPMS_CMUT_V2</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QTabWidget" name="tabWidget_2">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="tab_7">
+          <attribute name="title">
+           <string>Calibration</string>
+          </attribute>
+          <layout class="QGridLayout" name="gridLayout_5">
+           <item row="0" column="0">
+            <widget class="QGroupBox" name="group_rotation">
+             <property name="title">
+              <string>Rotation</string>
+             </property>
+             <widget class="QLabel" name="label_7">
+              <property name="geometry">
+               <rect>
+                <x>50</x>
+                <y>50</y>
+                <width>101</width>
+                <height>16</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Angle step size:</string>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_8">
+              <property name="geometry">
+               <rect>
+                <x>50</x>
+                <y>80</y>
+                <width>101</width>
+                <height>16</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Total rotation:</string>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_9">
+              <property name="geometry">
+               <rect>
+                <x>50</x>
+                <y>110</y>
+                <width>201</width>
+                <height>16</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Distance transmitter-receiver:</string>
+              </property>
+             </widget>
+             <widget class="QDoubleSpinBox" name="rotation_angle_step_size">
+              <property name="geometry">
+               <rect>
+                <x>330</x>
+                <y>50</y>
+                <width>81</width>
+                <height>22</height>
+               </rect>
+              </property>
+              <property name="suffix">
+               <string> °</string>
+              </property>
+             </widget>
+             <widget class="QDoubleSpinBox" name="rotation_total_rotation">
+              <property name="geometry">
+               <rect>
+                <x>330</x>
+                <y>80</y>
+                <width>81</width>
+                <height>22</height>
+               </rect>
+              </property>
+              <property name="suffix">
+               <string> °</string>
+              </property>
+              <property name="maximum">
+               <double>360.000000000000000</double>
+              </property>
+             </widget>
+             <widget class="QDoubleSpinBox" name="rotation_distance">
+              <property name="geometry">
+               <rect>
+                <x>330</x>
+                <y>110</y>
+                <width>81</width>
+                <height>22</height>
+               </rect>
+              </property>
+              <property name="suffix">
+               <string> cm</string>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="rotation_calculate">
+              <property name="geometry">
+               <rect>
+                <x>50</x>
+                <y>130</y>
+                <width>361</width>
+                <height>32</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Calculate</string>
+              </property>
+             </widget>
+             <widget class="QRadioButton" name="radioButton">
+              <property name="geometry">
+               <rect>
+                <x>220</x>
+                <y>20</y>
+                <width>99</width>
+                <height>20</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Blue Robot</string>
+              </property>
+             </widget>
+             <widget class="QRadioButton" name="radioButton_2">
+              <property name="geometry">
+               <rect>
+                <x>320</x>
+                <y>20</y>
+                <width>99</width>
+                <height>20</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Red Robot</string>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_14">
+              <property name="geometry">
+               <rect>
+                <x>50</x>
+                <y>20</y>
+                <width>141</width>
+                <height>16</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string>Which Robot turns?</string>
+              </property>
+             </widget>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QGroupBox" name="groupBox">
+             <property name="title">
+              <string>GroupBox</string>
+             </property>
+             <widget class="QLabel" name="label_23">
+              <property name="geometry">
+               <rect>
+                <x>50</x>
+                <y>30</y>
+                <width>291</width>
+                <height>141</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap>pictures/Robo Overview Red Turning.jpg</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2">
+            <widget class="QGroupBox" name="groupBox_8">
+             <property name="title">
+              <string>Checklist</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_6">
+              <item row="6" column="0">
+               <widget class="QPushButton" name="checklist_save_csv">
+                <property name="text">
+                 <string>Save to CSV</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QCheckBox" name="checklist_checkBox_4">
+                <property name="text">
+                 <string>Have the correct spacers been used?</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0" colspan="2">
+               <widget class="QCheckBox" name="checklist_checkBox_3">
+                <property name="text">
+                 <string>Are the piezo and cMUT each mounted on the correct robot?</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QCheckBox" name="checklist_checkBox_2">
+                <property name="text">
+                 <string>cMUT / piezo aperature axis aligned with rotary axis?</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="1">
+               <widget class="QPushButton" name="checklist_start_measurement">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <bold>false</bold>
+                  <strikeout>false</strikeout>
+                 </font>
+                </property>
+                <property name="mouseTracking">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>Proceed to measurement &gt;</string>
+                </property>
+                <property name="checkable">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QCheckBox" name="checklist_checkBox_1">
+                <property name="text">
+                 <string>Alignment of the cMUT checked? (long/short side)</string>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="0" colspan="2">
+               <widget class="QProgressBar" name="progressBar">
+                <property name="value">
+                 <number>0</number>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QCheckBox" name="checklist_checkBox_5">
+                <property name="text">
+                 <string>Is the correct distance set between the transmitter and receiver?</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tab_8">
+          <attribute name="title">
+           <string>B-Scan</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="tab_9">
+          <attribute name="title">
+           <string>Linear-Array</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="tab_10">
+          <attribute name="title">
+           <string>2D-Array</string>
+          </attribute>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_measurement">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <attribute name="title">
+       <string>Measurement</string>
+      </attribute>
+      <widget class="QGroupBox" name="group_mode">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>0</y>
-         <width>471</width>
+         <x>40</x>
+         <y>40</y>
+         <width>161</width>
          <height>171</height>
         </rect>
        </property>
-       <property name="title">
-        <string>Rotation</string>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <widget class="QLabel" name="label_7">
+       <property name="title">
+        <string>Mode</string>
+       </property>
+       <widget class="QRadioButton" name="mode_loadcsv">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>50</y>
-          <width>101</width>
-          <height>16</height>
+          <x>20</x>
+          <y>40</y>
+          <width>131</width>
+          <height>20</height>
          </rect>
         </property>
         <property name="text">
-         <string>Angle step size:</string>
+         <string>Execute planned</string>
         </property>
        </widget>
-       <widget class="QLabel" name="label_8">
+       <widget class="QRadioButton" name="mode_planned">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>80</y>
-          <width>101</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Total rotation:</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_9">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>110</y>
-          <width>201</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Distance transmitter-receiver:</string>
-        </property>
-       </widget>
-       <widget class="QDoubleSpinBox" name="rotation_angle_step_size">
-        <property name="geometry">
-         <rect>
-          <x>330</x>
-          <y>50</y>
-          <width>81</width>
-          <height>22</height>
-         </rect>
-        </property>
-        <property name="suffix">
-         <string> °</string>
-        </property>
-       </widget>
-       <widget class="QDoubleSpinBox" name="rotation_total_rotation">
-        <property name="geometry">
-         <rect>
-          <x>330</x>
-          <y>80</y>
-          <width>81</width>
-          <height>22</height>
-         </rect>
-        </property>
-        <property name="suffix">
-         <string> °</string>
-        </property>
-        <property name="maximum">
-         <double>360.000000000000000</double>
-        </property>
-       </widget>
-       <widget class="QDoubleSpinBox" name="rotation_distance">
-        <property name="geometry">
-         <rect>
-          <x>330</x>
-          <y>110</y>
-          <width>81</width>
-          <height>22</height>
-         </rect>
-        </property>
-        <property name="suffix">
-         <string> cm</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="rotation_calculate">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>130</y>
-          <width>361</width>
-          <height>32</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Calculate</string>
-        </property>
-       </widget>
-       <widget class="QRadioButton" name="radioButton">
-        <property name="geometry">
-         <rect>
-          <x>220</x>
-          <y>20</y>
+          <x>20</x>
+          <y>60</y>
           <width>99</width>
           <height>20</height>
          </rect>
         </property>
         <property name="text">
-         <string>Blue Robot</string>
-        </property>
-       </widget>
-       <widget class="QRadioButton" name="radioButton_2">
-        <property name="geometry">
-         <rect>
-          <x>320</x>
-          <y>20</y>
-          <width>99</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Red Robot</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_14">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>20</y>
-          <width>141</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Which Robot turns?</string>
+         <string>Load CSV</string>
         </property>
        </widget>
       </widget>
-      <widget class="QGroupBox" name="groupBox_8">
+      <widget class="QGroupBox" name="group_control">
        <property name="geometry">
         <rect>
-         <x>490</x>
-         <y>0</y>
-         <width>381</width>
+         <x>210</x>
+         <y>40</y>
+         <width>251</width>
          <height>171</height>
         </rect>
        </property>
-       <property name="title">
-        <string>Checklist</string>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <widget class="QCheckBox" name="checkBox">
+       <property name="title">
+        <string>Control</string>
+       </property>
+       <widget class="QPushButton" name="control_play">
         <property name="geometry">
          <rect>
-          <x>120</x>
+          <x>20</x>
           <y>30</y>
-          <width>161</width>
-          <height>20</height>
+          <width>201</width>
+          <height>32</height>
          </rect>
         </property>
         <property name="text">
-         <string>Check image</string>
+         <string>⏯</string>
         </property>
        </widget>
-       <widget class="QCheckBox" name="checkBox_2">
+       <widget class="QPushButton" name="control_stop">
         <property name="geometry">
          <rect>
-          <x>120</x>
-          <y>50</y>
-          <width>161</width>
-          <height>20</height>
+          <x>20</x>
+          <y>60</y>
+          <width>201</width>
+          <height>32</height>
          </rect>
         </property>
         <property name="text">
-         <string>Near field / far field</string>
+         <string>⏹</string>
         </property>
        </widget>
-       <widget class="QCheckBox" name="checkBox_3">
+       <widget class="QPushButton" name="control_servo_blue_on">
         <property name="geometry">
          <rect>
-          <x>120</x>
+          <x>90</x>
+          <y>90</y>
+          <width>61</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>ON</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_19">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>90</y>
+          <width>71</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Servo Blue</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="control_servo_blue_off">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>90</y>
+          <width>61</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>OFF</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_20">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>120</y>
+          <width>71</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Servo Red</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="control_servo_red_on">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>120</y>
+          <width>61</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>ON</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="control_servo_red_off">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>120</y>
+          <width>61</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>OFF</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QGroupBox" name="group_status">
+       <property name="geometry">
+        <rect>
+         <x>480</x>
+         <y>40</y>
+         <width>451</width>
+         <height>171</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="title">
+        <string>Status</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <widget class="QLabel" name="label">
+        <property name="geometry">
+         <rect>
+          <x>100</x>
+          <y>40</y>
+          <width>58</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>cMUT</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_2">
+        <property name="geometry">
+         <rect>
+          <x>100</x>
           <y>70</y>
-          <width>161</width>
-          <height>20</height>
+          <width>58</width>
+          <height>16</height>
          </rect>
         </property>
         <property name="text">
-         <string>...</string>
+         <string>Piezo</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="checklist_start_measurement">
+       <widget class="QProgressBar" name="status_progressbar">
         <property name="geometry">
          <rect>
-          <x>200</x>
+          <x>20</x>
           <y>100</y>
-          <width>151</width>
-          <height>32</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Start measurement</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="checklist_save_csv">
-        <property name="geometry">
-         <rect>
-          <x>30</x>
-          <y>100</y>
-          <width>161</width>
-          <height>32</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Save to CSV</string>
-        </property>
-       </widget>
-       <widget class="QProgressBar" name="progressBar">
-        <property name="geometry">
-         <rect>
-          <x>30</x>
-          <y>140</y>
-          <width>321</width>
+          <width>411</width>
           <height>23</height>
          </rect>
         </property>
         <property name="value">
-         <number>0</number>
+         <number>24</number>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_4">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>120</y>
+          <width>211</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>X von Y Messungen abgeschlossen</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_3">
+        <property name="geometry">
+         <rect>
+          <x>140</x>
+          <y>140</y>
+          <width>151</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Verbleibende Zeit ... min</string>
+        </property>
+       </widget>
+       <widget class="QGraphicsView" name="status_cmut">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>40</y>
+          <width>31</width>
+          <height>16</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QGraphicsView" name="status_piezo">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>70</y>
+          <width>31</width>
+          <height>16</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_5">
+        <property name="geometry">
+         <rect>
+          <x>260</x>
+          <y>40</y>
+          <width>58</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Servo 1</string>
+        </property>
+       </widget>
+       <widget class="QGraphicsView" name="status_servo1">
+        <property name="geometry">
+         <rect>
+          <x>320</x>
+          <y>40</y>
+          <width>31</width>
+          <height>16</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QGraphicsView" name="status_servo2">
+        <property name="geometry">
+         <rect>
+          <x>320</x>
+          <y>70</y>
+          <width>31</width>
+          <height>16</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_6">
+        <property name="geometry">
+         <rect>
+          <x>260</x>
+          <y>70</y>
+          <width>58</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Servo 2</string>
+        </property>
+       </widget>
+       <widget class="Line" name="line">
+        <property name="geometry">
+         <rect>
+          <x>220</x>
+          <y>30</y>
+          <width>20</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QGroupBox" name="group_terminal">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>240</y>
+         <width>891</width>
+         <height>271</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="title">
+        <string>Terminal Ausgabe</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <widget class="QTextBrowser" name="terminal_display">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>40</y>
+          <width>851</width>
+          <height>211</height>
+         </rect>
+        </property>
+        <property name="undoRedoEnabled">
+         <bool>false</bool>
         </property>
        </widget>
       </widget>
      </widget>
-     <widget class="QWidget" name="tab_8">
+     <widget class="QWidget" name="tab_simulation">
       <attribute name="title">
-       <string>B-Scan</string>
+       <string>Simulation</string>
       </attribute>
      </widget>
-     <widget class="QWidget" name="tab_9">
+     <widget class="QWidget" name="tab_demo">
       <attribute name="title">
-       <string>Linear-Array</string>
-      </attribute>
-     </widget>
-     <widget class="QWidget" name="tab_10">
-      <attribute name="title">
-       <string>2D-Array</string>
+       <string>Demo</string>
       </attribute>
      </widget>
     </widget>
-    <widget class="QGroupBox" name="group_setup">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>20</y>
-       <width>641</width>
-       <height>161</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>Setup</string>
-     </property>
-     <widget class="QLabel" name="label_10">
-      <property name="geometry">
-       <rect>
-        <x>240</x>
-        <y>20</y>
-        <width>31</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>x</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_11">
-      <property name="geometry">
-       <rect>
-        <x>310</x>
-        <y>20</y>
-        <width>31</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>y</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_12">
-      <property name="geometry">
-       <rect>
-        <x>380</x>
-        <y>20</y>
-        <width>31</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>z</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_13">
-      <property name="geometry">
-       <rect>
-        <x>450</x>
-        <y>20</y>
-        <width>31</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>r</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="setup_load_blue">
-      <property name="geometry">
-       <rect>
-        <x>500</x>
-        <y>40</y>
-        <width>61</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Load</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="setup_goto_blue">
-      <property name="geometry">
-       <rect>
-        <x>570</x>
-        <y>40</y>
-        <width>61</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Go to</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="setup_goto_red">
-      <property name="geometry">
-       <rect>
-        <x>570</x>
-        <y>80</y>
-        <width>61</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Go to</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="setup_load_red">
-      <property name="geometry">
-       <rect>
-        <x>500</x>
-        <y>80</y>
-        <width>61</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Load</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="setup_servo_red_on">
-      <property name="geometry">
-       <rect>
-        <x>80</x>
-        <y>80</y>
-        <width>61</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>ON</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_21">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>80</y>
-        <width>71</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Servo Red</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="setup_servo_red_off">
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>80</y>
-        <width>61</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>OFF</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="setup_servo_blue_on">
-      <property name="geometry">
-       <rect>
-        <x>80</x>
-        <y>40</y>
-        <width>61</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>ON</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_22">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>40</y>
-        <width>71</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Servo Blue</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="setup_servo_blue_off">
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>40</y>
-        <width>61</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>OFF</string>
-      </property>
-     </widget>
-     <widget class="QDoubleSpinBox" name="setup_blue_x">
-      <property name="geometry">
-       <rect>
-        <x>220</x>
-        <y>40</y>
-        <width>62</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="suffix">
-       <string/>
-      </property>
-      <property name="minimum">
-       <double>-1000.000000000000000</double>
-      </property>
-      <property name="maximum">
-       <double>1000.000000000000000</double>
-      </property>
-     </widget>
-     <widget class="QDoubleSpinBox" name="setup_red_x">
-      <property name="geometry">
-       <rect>
-        <x>220</x>
-        <y>80</y>
-        <width>62</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="minimum">
-       <double>-1000.000000000000000</double>
-      </property>
-      <property name="maximum">
-       <double>1000.000000000000000</double>
-      </property>
-     </widget>
-     <widget class="QDoubleSpinBox" name="setup_red_y">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>80</y>
-        <width>62</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="minimum">
-       <double>-1000.000000000000000</double>
-      </property>
-      <property name="maximum">
-       <double>1000.000000000000000</double>
-      </property>
-     </widget>
-     <widget class="QDoubleSpinBox" name="setup_blue_y">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>40</y>
-        <width>62</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="minimum">
-       <double>-1000.000000000000000</double>
-      </property>
-      <property name="maximum">
-       <double>1000.000000000000000</double>
-      </property>
-     </widget>
-     <widget class="QDoubleSpinBox" name="setup_red_z">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>80</y>
-        <width>62</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="minimum">
-       <double>0.000000000000000</double>
-      </property>
-      <property name="maximum">
-       <double>1000.000000000000000</double>
-      </property>
-     </widget>
-     <widget class="QDoubleSpinBox" name="setup_blue_z">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>40</y>
-        <width>62</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="minimum">
-       <double>0.000000000000000</double>
-      </property>
-      <property name="maximum">
-       <double>1000.000000000000000</double>
-      </property>
-     </widget>
-     <widget class="QDoubleSpinBox" name="setup_red_r">
-      <property name="geometry">
-       <rect>
-        <x>430</x>
-        <y>80</y>
-        <width>62</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="minimum">
-       <double>-1000.000000000000000</double>
-      </property>
-      <property name="maximum">
-       <double>1000.000000000000000</double>
-      </property>
-     </widget>
-     <widget class="QDoubleSpinBox" name="setup_blue_r">
-      <property name="geometry">
-       <rect>
-        <x>430</x>
-        <y>40</y>
-        <width>62</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="minimum">
-       <double>-1000.000000000000000</double>
-      </property>
-      <property name="maximum">
-       <double>1000.000000000000000</double>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="setup_set_start_point">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>120</y>
-        <width>621</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Set as start point</string>
-      </property>
-     </widget>
-     <zorder>label_10</zorder>
-     <zorder>label_11</zorder>
-     <zorder>label_12</zorder>
-     <zorder>label_13</zorder>
-     <zorder>setup_load_blue</zorder>
-     <zorder>setup_goto_blue</zorder>
-     <zorder>setup_goto_red</zorder>
-     <zorder>setup_load_red</zorder>
-     <zorder>setup_servo_red_on</zorder>
-     <zorder>label_21</zorder>
-     <zorder>setup_servo_red_off</zorder>
-     <zorder>setup_servo_blue_on</zorder>
-     <zorder>label_22</zorder>
-     <zorder>setup_servo_blue_off</zorder>
-     <zorder>setup_red_x</zorder>
-     <zorder>setup_red_y</zorder>
-     <zorder>setup_blue_y</zorder>
-     <zorder>setup_red_z</zorder>
-     <zorder>setup_blue_z</zorder>
-     <zorder>setup_red_r</zorder>
-     <zorder>setup_blue_r</zorder>
-     <zorder>setup_set_start_point</zorder>
-     <zorder>setup_blue_x</zorder>
-    </widget>
-    <widget class="QGroupBox" name="groupBox_10">
-     <property name="geometry">
-      <rect>
-       <x>680</x>
-       <y>20</y>
-       <width>271</width>
-       <height>291</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>Plot</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <widget class="QGraphicsView" name="graphicsView_5">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>40</y>
-        <width>231</width>
-        <height>231</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QGroupBox" name="group_documentation">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>190</y>
-       <width>641</width>
-       <height>121</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>Documentation</string>
-     </property>
-     <widget class="QLabel" name="label_17">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>80</y>
-        <width>91</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Transmitter:</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="comboBox_2">
-      <property name="geometry">
-       <rect>
-        <x>120</x>
-        <y>70</y>
-        <width>151</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <item>
-       <property name="text">
-        <string>IKTS_PCB_V1</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>IKTS_PCB_V2</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="QLabel" name="label_15">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>40</y>
-        <width>91</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Water depth:</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_18">
-      <property name="geometry">
-       <rect>
-        <x>340</x>
-        <y>80</y>
-        <width>91</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Receiver:</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="comboBox">
-      <property name="geometry">
-       <rect>
-        <x>400</x>
-        <y>30</y>
-        <width>191</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <item>
-       <property name="text">
-        <string>Suture</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Tissue</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="QComboBox" name="comboBox_3">
-      <property name="geometry">
-       <rect>
-        <x>400</x>
-        <y>70</y>
-        <width>191</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <item>
-       <property name="text">
-        <string>IPMS_CMUT_V1</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>IPMS_CMUT_V2</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="QLabel" name="label_16">
-      <property name="geometry">
-       <rect>
-        <x>340</x>
-        <y>40</y>
-        <width>91</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Model:</string>
-      </property>
-     </widget>
-     <widget class="QDoubleSpinBox" name="doubleSpinBox">
-      <property name="geometry">
-       <rect>
-        <x>130</x>
-        <y>40</y>
-        <width>131</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="suffix">
-       <string> cm</string>
-      </property>
-      <property name="decimals">
-       <number>1</number>
-      </property>
-     </widget>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="tab_measurement">
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <attribute name="title">
-     <string>Measurement</string>
-    </attribute>
-    <widget class="QGroupBox" name="group_mode">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>40</y>
-       <width>161</width>
-       <height>171</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="title">
-      <string>Mode</string>
-     </property>
-     <widget class="QRadioButton" name="mode_loadcsv">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>40</y>
-        <width>131</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Execute planned</string>
-      </property>
-     </widget>
-     <widget class="QRadioButton" name="mode_planned">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>60</y>
-        <width>99</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Load CSV</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QGroupBox" name="group_control">
-     <property name="geometry">
-      <rect>
-       <x>210</x>
-       <y>40</y>
-       <width>251</width>
-       <height>171</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="title">
-      <string>Control</string>
-     </property>
-     <widget class="QPushButton" name="control_play">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>30</y>
-        <width>201</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>⏯</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="control_stop">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>60</y>
-        <width>201</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>⏹</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="control_servo_blue_on">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>90</y>
-        <width>61</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>ON</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_19">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>90</y>
-        <width>71</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Servo Blue</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="control_servo_blue_off">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>90</y>
-        <width>61</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>OFF</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_20">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>120</y>
-        <width>71</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Servo Red</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="control_servo_red_on">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>120</y>
-        <width>61</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>ON</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="control_servo_red_off">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>120</y>
-        <width>61</width>
-        <height>32</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>OFF</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QGroupBox" name="group_status">
-     <property name="geometry">
-      <rect>
-       <x>480</x>
-       <y>40</y>
-       <width>451</width>
-       <height>171</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="title">
-      <string>Status</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <widget class="QLabel" name="label">
-      <property name="geometry">
-       <rect>
-        <x>100</x>
-        <y>40</y>
-        <width>58</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>cMUT</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_2">
-      <property name="geometry">
-       <rect>
-        <x>100</x>
-        <y>70</y>
-        <width>58</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Piezo</string>
-      </property>
-     </widget>
-     <widget class="QProgressBar" name="status_progressbar">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>100</y>
-        <width>411</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="value">
-       <number>24</number>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_4">
-      <property name="geometry">
-       <rect>
-        <x>110</x>
-        <y>120</y>
-        <width>211</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>X von Y Messungen abgeschlossen</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_3">
-      <property name="geometry">
-       <rect>
-        <x>140</x>
-        <y>140</y>
-        <width>151</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Verbleibende Zeit ... min</string>
-      </property>
-     </widget>
-     <widget class="QGraphicsView" name="status_cmut">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>40</y>
-        <width>31</width>
-        <height>16</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QGraphicsView" name="status_piezo">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>70</y>
-        <width>31</width>
-        <height>16</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_5">
-      <property name="geometry">
-       <rect>
-        <x>260</x>
-        <y>40</y>
-        <width>58</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Servo 1</string>
-      </property>
-     </widget>
-     <widget class="QGraphicsView" name="status_servo1">
-      <property name="geometry">
-       <rect>
-        <x>320</x>
-        <y>40</y>
-        <width>31</width>
-        <height>16</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QGraphicsView" name="status_servo2">
-      <property name="geometry">
-       <rect>
-        <x>320</x>
-        <y>70</y>
-        <width>31</width>
-        <height>16</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_6">
-      <property name="geometry">
-       <rect>
-        <x>260</x>
-        <y>70</y>
-        <width>58</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Servo 2</string>
-      </property>
-     </widget>
-     <widget class="Line" name="line">
-      <property name="geometry">
-       <rect>
-        <x>220</x>
-        <y>30</y>
-        <width>20</width>
-        <height>71</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QGroupBox" name="group_terminal">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>240</y>
-       <width>891</width>
-       <height>271</height>
-      </rect>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="title">
-      <string>Terminal Ausgabe</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <widget class="QTextBrowser" name="terminal_display">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>40</y>
-        <width>851</width>
-        <height>211</height>
-       </rect>
-      </property>
-      <property name="undoRedoEnabled">
-       <bool>false</bool>
-      </property>
-     </widget>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="tab_simulation">
-    <attribute name="title">
-     <string>Simulation</string>
-    </attribute>
-   </widget>
-   <widget class="QWidget" name="tab_demo">
-    <attribute name="title">
-     <string>Demo</string>
-    </attribute>
-   </widget>
-  </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>
