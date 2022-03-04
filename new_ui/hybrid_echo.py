@@ -8,15 +8,15 @@ from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
 from PyQt5 import uic
-from roboter_operation import RoboterOperation
-from parameter import network_parameters
-from parameter import udp_messages
-from pxi_operation import PXIOperation
+#from roboter_operation import RoboterOperation
+#from parameter import network_parameters
+#from parameter import udp_messages
+#from pxi_operation import PXIOperation
 import time
 
 
-os.chdir("C:/Users/Moritz/Documents/Code/Roboter/new_ui") #für Windows
-#os.chdir("/Users/julian/Documents/HybridEcho/Roboter/new_ui") #für macOS
+#os.chdir("C:/Users/Moritz/Documents/Code/Roboter/new_ui") #für Windows
+os.chdir("/Users/julian/Documents/HybridEcho/Roboter/new_ui") #für macOS
 MW_Ui, MW_Base = uic.loadUiType("gui_view.ui")
 
 
@@ -27,9 +27,15 @@ class MainWindow(MW_Base, MW_Ui):
         super().__init__()
         self.setupUi(self)
 
-        self.roboter_operation = RoboterOperation()
+        #self.roboter_operation = RoboterOperation()
         
         #self.pxi_operation = PXIOperation()
+
+        ##initialization##
+        self.preview_blue_turning.setVisible(False)
+        self.preview_red_turning.setVisible(False)
+        self.preview_no_turning.setVisible(True)
+
 
         ##################
         # Connect Events #
@@ -59,7 +65,20 @@ class MainWindow(MW_Base, MW_Ui):
 
         ## checklist ##
         self.checklist_save_csv.clicked.connect(self.save_csv)
-        self.checklist_start_measurement.clicked.connect(self.start_measurement)
+        #self.checklist_start_measurement.clicked.connect(self.start_measurement)
+        self.checklist_checkBox_1.stateChanged.connect(self.checklist)
+        self.checklist_checkBox_2.stateChanged.connect(self.checklist)
+        self.checklist_checkBox_3.stateChanged.connect(self.checklist)
+        self.checklist_checkBox_4.stateChanged.connect(self.checklist)
+        self.checklist_checkBox_5.stateChanged.connect(self.checklist)
+
+
+        self.checklist_start_measurement.clicked.connect(self.proceed_to_measurement)
+
+
+        ##rotation##
+        self.rotation_blue_robot.toggled.connect(self.preview_state)
+        self.rotation_red_robot.toggled.connect(self.preview_state)
 
 
         ##################
@@ -81,7 +100,27 @@ class MainWindow(MW_Base, MW_Ui):
     def servo_red_off(self):
         RoboterOperation.roboter_message(self, network_parameters.tnred, "C:R:SERVO_OFF", "R:C:SERVO_OFF")
         
-    
+    def checklist(self):
+        if self.checklist_checkBox_1.isChecked() == True and self.checklist_checkBox_2.isChecked() == True and self.checklist_checkBox_3.isChecked() == True and self.checklist_checkBox_4.isChecked() == True and self.checklist_checkBox_5.isChecked() == True:
+            self.checklist_start_measurement.setEnabled(True)
+        else:
+            return
+
+
+    def preview_state(self):
+        if self.rotation_blue_robot.isChecked() == True:
+            self.preview_blue_turning.setVisible(True)
+            self.preview_red_turning.setVisible(False)
+            self.preview_no_turning.setVisible(False)
+        elif self.rotation_red_robot.isChecked() == True:
+            self.preview_blue_turning.setVisible(False)
+            self.preview_red_turning.setVisible(True)
+            self.preview_no_turning.setVisible(False)
+        else:
+            self.preview_blue_turning.setVisible(False)
+            self.preview_red_turning.setVisible(False)
+            self.preview_no_turning.setVisible(True)
+
     def set_start_point(self):
         global coordinates_blue, coordinates_red
         coordinates_blue = self.read_coordinates_blue()
@@ -161,6 +200,10 @@ class MainWindow(MW_Base, MW_Ui):
     def save_csv(self):
         filename = "C:/Users/Moritz/Documents/Code/Roboter/new_ui/test.csv"
         RoboterOperation.save_to_csv(self, calibration_rotation_dataframe, filename)
+
+    def proceed_to_measurement(self):
+        self.tab_widget.setCurrentIndex(1)
+
 
     def start_measurement(self):
         angle_step_size = self.rotation_angle_step_size.value() #in Funktion integrieren

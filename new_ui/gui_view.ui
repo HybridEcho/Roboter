@@ -492,7 +492,7 @@
                <string>Calculate</string>
               </property>
              </widget>
-             <widget class="QRadioButton" name="radioButton">
+             <widget class="QRadioButton" name="rotation_blue_robot">
               <property name="geometry">
                <rect>
                 <x>220</x>
@@ -505,7 +505,7 @@
                <string>Blue Robot</string>
               </property>
              </widget>
-             <widget class="QRadioButton" name="radioButton_2">
+             <widget class="QRadioButton" name="rotation_red_robot">
               <property name="geometry">
                <rect>
                 <x>320</x>
@@ -536,22 +536,69 @@
            <item row="0" column="1">
             <widget class="QGroupBox" name="groupBox">
              <property name="title">
-              <string>GroupBox</string>
+              <string>Preview</string>
              </property>
-             <widget class="QLabel" name="label_23">
+             <widget class="QLabel" name="preview_blue_turning">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
               <property name="geometry">
                <rect>
                 <x>50</x>
-                <y>30</y>
-                <width>291</width>
-                <height>141</height>
+                <y>20</y>
+                <width>311</width>
+                <height>151</height>
                </rect>
               </property>
               <property name="text">
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap>pictures/Robo Overview Red Turning.jpg</pixmap>
+               <pixmap>pictures/robo_blue_turning.png</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+             </widget>
+             <widget class="QLabel" name="preview_red_turning">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="geometry">
+               <rect>
+                <x>50</x>
+                <y>20</y>
+                <width>311</width>
+                <height>151</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap>pictures/robo_red_turning.png</pixmap>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+             </widget>
+             <widget class="QLabel" name="preview_no_turning">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="geometry">
+               <rect>
+                <x>50</x>
+                <y>20</y>
+                <width>311</width>
+                <height>151</height>
+               </rect>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap>pictures/robo_no_turning.png</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -565,31 +612,17 @@
               <string>Checklist</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_6">
+              <item row="2" column="1">
+               <widget class="QCheckBox" name="checklist_checkBox_5">
+                <property name="text">
+                 <string>Is the correct distance set between the transmitter and receiver?</string>
+                </property>
+               </widget>
+              </item>
               <item row="6" column="0">
                <widget class="QPushButton" name="checklist_save_csv">
                 <property name="text">
                  <string>Save to CSV</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QCheckBox" name="checklist_checkBox_4">
-                <property name="text">
-                 <string>Have the correct spacers been used?</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0" colspan="2">
-               <widget class="QCheckBox" name="checklist_checkBox_3">
-                <property name="text">
-                 <string>Are the piezo and cMUT each mounted on the correct robot?</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QCheckBox" name="checklist_checkBox_2">
-                <property name="text">
-                 <string>cMUT / piezo aperature axis aligned with rotary axis?</string>
                 </property>
                </widget>
               </item>
@@ -615,6 +648,20 @@
                 </property>
                </widget>
               </item>
+              <item row="0" column="1">
+               <widget class="QCheckBox" name="checklist_checkBox_4">
+                <property name="text">
+                 <string>Have the correct spacers been used?</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0" colspan="2">
+               <widget class="QCheckBox" name="checklist_checkBox_3">
+                <property name="text">
+                 <string>Are the piezo and cMUT each mounted on the correct robot?</string>
+                </property>
+               </widget>
+              </item>
               <item row="0" column="0">
                <widget class="QCheckBox" name="checklist_checkBox_1">
                 <property name="text">
@@ -622,17 +669,17 @@
                 </property>
                </widget>
               </item>
+              <item row="2" column="0">
+               <widget class="QCheckBox" name="checklist_checkBox_2">
+                <property name="text">
+                 <string>cMUT / piezo aperature axis aligned with rotary axis?</string>
+                </property>
+               </widget>
+              </item>
               <item row="7" column="0" colspan="2">
                <widget class="QProgressBar" name="progressBar">
                 <property name="value">
                  <number>0</number>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QCheckBox" name="checklist_checkBox_5">
-                <property name="text">
-                 <string>Is the correct distance set between the transmitter and receiver?</string>
                 </property>
                </widget>
               </item>
