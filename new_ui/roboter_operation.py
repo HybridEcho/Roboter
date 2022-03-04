@@ -7,18 +7,19 @@ import re
 
 class RoboterOperation(qtc.QObject):
     def __init__(self):
-        self.position_robo_blue = np.array([1])
+        pass
     
     
-
     def dev_roboter_message(self, tn_robo, dev_message):
         print(tn_robo + "---" + dev_message)
+
 
     def dev_roboter_feedback(self):
         tn_robo = input()
         dev_feedback_message = input()
         dev_feedback = tn_robo + "---" + dev_feedback_message
         return dev_feedback
+
 
     def roboter_message(self, tn_robo, message, end_message):
         """Sends message to roboter controller via ethernet
@@ -38,6 +39,7 @@ class RoboterOperation(qtc.QObject):
         reply = tn_robo.read_until(f"{end_message}\r\n".encode("ascii"), 10)
         print("read message")
         return reply
+
 
     def roboter_message_move(self, tn_robo, message, coordinates_message, end_message):
         tn_robo.write(f"{message}\r\n".encode("ascii"))
@@ -91,18 +93,13 @@ class RoboterOperation(qtc.QObject):
     def message_parser(self, message):
         print(message)
         message_str = message.decode() # convert byte to string
-
         data_str_split = message_str.split('P11')[1] # split str by "P11"
-
         num_values =  re.findall(r'[-+]?(?:\d*\.\d+|\d+)', data_str_split) 
-
         x = float(num_values[0])
         y = float(num_values[1])
         z = float(num_values[2])
         r = float(num_values[3])
-
         coordinates = [x, y, z, r]
-
         return coordinates
 
 
@@ -121,7 +118,7 @@ class RoboterOperation(qtc.QObject):
         start_position_calibration_blue[3] = start_position_calibration_blue[3] - total_rotation/2
         number_of_steps = total_rotation / angle_step_size
         step_blue = np.arange(0, total_rotation+angle_step_size, angle_step_size)
-#        calibration_array_blue = np.column_stack((start_position_calibration_blue[0] + step_blue*0, start_position_calibration_blue[1] + step_blue*0, start_position_calibration_blue[2] + step_blue*0, np.round(start_position_calibration_blue[3] + step_blue, 3)))
+        #calibration_array_blue = np.column_stack((start_position_calibration_blue[0] + step_blue*0, start_position_calibration_blue[1] + step_blue*0, start_position_calibration_blue[2] + step_blue*0, np.round(start_position_calibration_blue[3] + step_blue, 3)))
         calibration_array_blue = np.column_stack((start_position_calibration_blue[0] + step_blue*0, start_position_calibration_blue[1] + step_blue*0, start_position_calibration_blue[2] + step_blue*0, start_position_calibration_blue[3] + step_blue))
         calibration_array_red = np.tile(start_position_calibration_red, (int(number_of_steps+1), 1))
         print(calibration_array_blue)
@@ -140,52 +137,8 @@ class RoboterOperation(qtc.QObject):
         tn_robo = "Robo Blue"
         return tn_robo, message
 
+
     def set_position_red(self):
         message = "C:R:GOTO_POSITION"
         tn_robo = "Robo Red"
         return tn_robo, message
-    
-    # def get_position_blue(self):
-    #     self.roboter_message(network_parameters.tnblue, ("C:RB:CURRENT_POSITION\r\n".encode("ascii")))
-    #     self.roboter_feedback(network_parameters.tnblue, ("RB:C:END_MESSAGE".encode("ascii")))
-    #     self.start_position_blue = 1
-    #     return self.start_position_blue
-
-    # def get_position_red(self):
-    #     self.roboter_message(network_parameters.tnred, ("C:RR:CURRENT_POSITION\r\n".encode("ascii")))
-    #     self.roboter_feedback(network_parameters.tnred, ("RR:C:END_MESSAGE".encode("ascii")))
-    #     self.start_position_red = 1
-    #     return self.start_position_red
-
-    # def set_position_blue(self):
-
-
-    # def set_position_red(self):
-
-    
-
-    
-
-    
-    # def roboter_movement_by_csv(self, number_of_measurement, csv_data, tn_robo):
-    #     self.roboter_message(tn_robo, ("MOV\r\n".encode("ascii")))
-    #     print("start Message was send")
-    #     if tn_robo == network_parameters.tnred :
-    #         message_robo_point_np = np.array([csv_data[number_of_measurement,4], csv_data[number_of_measurement,5], csv_data[number_of_measurement,6], csv_data[number_of_measurement,7]])
-    #         message_robo_point_prestring = np.array2string(message_robo_point_np, precision=3, separator=' ', floatmode='fixed', suppress_small=True, formatter={'float_kind': '{: 0.10f}'.format})
-    #         message_robo_point_string = message_robo_point_prestring.strip('['']')
-    #         print(message_robo_point_string)
-    #     else:
-    #         print("blue on")
-    #         message_robo_point_np = np.array([csv_data[number_of_measurement,0], csv_data[number_of_measurement,1], csv_data[number_of_measurement,2], csv_data[number_of_measurement,3]])
-    #         message_robo_point_prestring = np.array2string(message_robo_point_np, precision=3, separator=' ', floatmode='fixed', suppress_small=True, formatter={'float_kind': '{: 0.10f}'.format})
-    #         message_robo_point_string = message_robo_point_prestring.strip('['']')
-    #         print(message_robo_point_string)
-    #     message_robo_point="P1 = ".encode("ascii") + message_robo_point_string.encode("ascii") + " 0 0 2\r\n".encode("ascii")
-    #     self.roboter_message(tn_robo, message_robo_point)
-    #     print("send point")
-    #     print(message_robo_point)
-    #     print("Point Message was send")
-    #     self.roboter_feedback(tn_robo, "P11=".encode("ascii"))
-    #     time.sleep(0.2)
-
