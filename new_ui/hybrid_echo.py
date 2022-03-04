@@ -8,10 +8,10 @@ from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
 from PyQt5 import uic
-#from roboter_operation import RoboterOperation
+from roboter_operation import RoboterOperation as RobOp
 #from parameter import network_parameters
 #from parameter import udp_messages
-#from pxi_operation import PXIOperation
+from pxi_operation import PXIOperation as PXIOp
 import time
 
 
@@ -27,10 +27,6 @@ class MainWindow(MW_Base, MW_Ui):
         super().__init__()
         self.setupUi(self)
 
-        #self.roboter_operation = RoboterOperation()
-        
-        #self.pxi_operation = PXIOperation()
-
         ##initialization##
         self.preview_blue_turning.setVisible(False)
         self.preview_red_turning.setVisible(False)
@@ -40,6 +36,7 @@ class MainWindow(MW_Base, MW_Ui):
         ##initialize variables##
         self.checklist_done = False
         self.lineedit_done = False
+        self.which_robot = "None"
 
 
         ##################
@@ -87,8 +84,8 @@ class MainWindow(MW_Base, MW_Ui):
 
 
         ##rotation##
-        self.rotation_blue_robot.toggled.connect(self.preview_state)
-        self.rotation_red_robot.toggled.connect(self.preview_state)
+        self.rotation_blue_robot.toggled.connect(self.preview_state, self.robot_selection)
+        self.rotation_red_robot.toggled.connect(self.preview_state, self.robot_selection)
 
 
         ##################
@@ -99,16 +96,16 @@ class MainWindow(MW_Base, MW_Ui):
 
 
     def servo_blue_on(self):
-        RoboterOperation.roboter_message(self, network_parameters.tnblue, "C:R:SERVO_ON", "R:C:SERVO_ON")
+        RobOp.roboter_message(self, network_parameters.tnblue, "C:R:SERVO_ON", "R:C:SERVO_ON")
     
     def servo_blue_off(self):
-        RoboterOperation.roboter_message(self, network_parameters.tnblue, "C:R:SERVO_OFF", "R:C:SERVO_OFF")
+        RobOp.roboter_message(self, network_parameters.tnblue, "C:R:SERVO_OFF", "R:C:SERVO_OFF")
 
     def servo_red_on(self):
-        RoboterOperation.roboter_message(self, network_parameters.tnred, "C:R:SERVO_ON", "R:C:SERVO_ON")
+        RobOp.roboter_message(self, network_parameters.tnred, "C:R:SERVO_ON", "R:C:SERVO_ON")
 
     def servo_red_off(self):
-        RoboterOperation.roboter_message(self, network_parameters.tnred, "C:R:SERVO_OFF", "R:C:SERVO_OFF")
+        RobOp.roboter_message(self, network_parameters.tnred, "C:R:SERVO_OFF", "R:C:SERVO_OFF")
         
     def checklist_checker(self):
         if self.checklist_checkBox_1.isChecked() == True and self.checklist_checkBox_2.isChecked() == True and self.checklist_checkBox_3.isChecked() == True and self.checklist_checkBox_4.isChecked() == True and self.checklist_checkBox_5.isChecked() == True:
@@ -143,6 +140,15 @@ class MainWindow(MW_Base, MW_Ui):
             self.preview_blue_turning.setVisible(False)
             self.preview_red_turning.setVisible(False)
             self.preview_no_turning.setVisible(True)
+
+    def robot_selection(self):
+        if self.rotation_blue_robot.isChecked() == True:
+            self.which_robot = "Blue"
+        elif self.rotation_red_robot.isChecked() == True:
+            self.which_robot = "Red"
+        else:
+            self.which_robot = "Error"
+
 
     def set_start_point(self):
         global coordinates_blue, coordinates_red
@@ -185,29 +191,29 @@ class MainWindow(MW_Base, MW_Ui):
         return coordinates_red
 
     def load_blue(self):
-        robo_message = RoboterOperation.roboter_message(self, network_parameters.tnblue, "C:R:CURRENT_POSITION", "R:C:CURRENT_POSITION")
-        coordinates_blue = RoboterOperation.message_parser(self, robo_message)
+        robo_message = RobOp.roboter_message(self, network_parameters.tnblue, "C:R:CURRENT_POSITION", "R:C:CURRENT_POSITION")
+        coordinates_blue = RobOp.message_parser(self, robo_message)
         self.populate_coordinates_blue(coordinates_blue)
 
     def load_red(self):
-        robo_message = RoboterOperation.roboter_message(self, network_parameters.tnred, "C:R:CURRENT_POSITION", "R:C:CURRENT_POSITION")
-        coordinates_red = RoboterOperation.message_parser(self, robo_message)
+        robo_message = RobOp.roboter_message(self, network_parameters.tnred, "C:R:CURRENT_POSITION", "R:C:CURRENT_POSITION")
+        coordinates_red = RobOp.message_parser(self, robo_message)
         self.populate_coordinates_red(coordinates_red)
 
 
     def goto_blue(self):
         coordinates_blue = self.read_coordinates_blue()
-        coordinates_message = RoboterOperation.message_assembler(self, coordinates_blue)
-        robo_message = RoboterOperation.roboter_message_move(self, network_parameters.tnblue, "C:R:GOTO_POSITION", coordinates_message, "R:C:GOTO_POSITION")
-        coordinates_blue = RoboterOperation.message_parser(self, robo_message)
+        coordinates_message = RobOp.message_assembler(self, coordinates_blue)
+        robo_message = RobOp.roboter_message_move(self, network_parameters.tnblue, "C:R:GOTO_POSITION", coordinates_message, "R:C:GOTO_POSITION")
+        coordinates_blue = RobOp.message_parser(self, robo_message)
         self.populate_coordinates_blue(coordinates_blue)
 
     
     def goto_red(self):
         coordinates_red = self.read_coordinates_red()
-        coordinates_message = RoboterOperation.message_assembler(self, coordinates_red)
-        robo_message = RoboterOperation.roboter_message_move(self, network_parameters.tnred, "C:R:GOTO_POSITION", coordinates_message, "R:C:GOTO_POSITION")
-        coordinates_red = RoboterOperation.message_parser(self, robo_message)
+        coordinates_message = RobOp.message_assembler(self, coordinates_red)
+        robo_message = RobOp.roboter_message_move(self, network_parameters.tnred, "C:R:GOTO_POSITION", coordinates_message, "R:C:GOTO_POSITION")
+        coordinates_red = RobOp.message_parser(self, robo_message)
         self.populate_coordinates_red(coordinates_red)
 
 
@@ -217,12 +223,12 @@ class MainWindow(MW_Base, MW_Ui):
         rotation_distance = self.rotation_distance.value()
 
         global calibration_rotation_dataframe
-        calibration_rotation_dataframe = RoboterOperation.calibration_calculation(angle_step_size, total_rotation, coordinates_blue, coordinates_red)
+        calibration_rotation_dataframe = RobOp.calibration_calculation(angle_step_size, total_rotation, coordinates_blue, coordinates_red)
 
     
     def save_csv(self):
         filename = "C:/Users/Moritz/Documents/Code/Roboter/new_ui/test.csv"
-        RoboterOperation.save_to_csv(self, calibration_rotation_dataframe, filename)
+        RobOp.save_to_csv(self, calibration_rotation_dataframe, filename)
 
     def proceed_to_measurement(self):
         self.tab_widget.setCurrentIndex(1)
@@ -233,25 +239,25 @@ class MainWindow(MW_Base, MW_Ui):
         total_rotation = self.rotation_total_rotation.value() #in Funktion integrieren
         rotation_distance = self.rotation_distance.value() #in Funktion integrieren
 
-        PXIOperation.UDP_connection_PXI(self, udp_messages.message_PXI_start + "Test", udp_messages.response_PXI_start  + "Test")
-        PXIOperation.UDP_connection_PXI(self,udp_messages.message_PXI_Log_parameter +f"Angle Step [deg] {angle_step_size} \n Total Angle Range [deg] {total_rotation} \n Rotation Distance [cm] {rotation_distance} \n" , udp_messages.response_PXI_Log_parameter)
+        PXIOp.UDP_connection_PXI(self, udp_messages.message_PXI_start + "Test", udp_messages.response_PXI_start  + "Test")
+        PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_Log_parameter +f"Angle Step [deg] {angle_step_size} \n Total Angle Range [deg] {total_rotation} \n Rotation Distance [cm] {rotation_distance} \n" , udp_messages.response_PXI_Log_parameter)
         
         calibration_rotation_blue = calibration_rotation_dataframe[["Blue_X","Blue_Y","Blue_Z", "Blue_R"]].to_numpy()
         calibration_rotation_red = calibration_rotation_dataframe[["Red_X","Red_Y","Red_Z", "Red_R"]].to_numpy()
 
-        coordinates_message_red = RoboterOperation.message_assembler(self, calibration_rotation_red[0])
-        robo_message_red = RoboterOperation.roboter_message_move(self, network_parameters.tnred, "C:R:GOTO_POSITION", coordinates_message_red, "R:C:GOTO_POSITION")
-        coordinates_red = RoboterOperation.message_parser(self, robo_message_red)
+        coordinates_message_red = RobOp.message_assembler(self, calibration_rotation_red[0])
+        robo_message_red = RobOp.roboter_message_move(self, network_parameters.tnred, "C:R:GOTO_POSITION", coordinates_message_red, "R:C:GOTO_POSITION")
+        coordinates_red = RobOp.message_parser(self, robo_message_red)
         self.populate_coordinates_red(coordinates_red)
 
         for i in range(len(calibration_rotation_blue)):
-            coordinates_message_blue = RoboterOperation.message_assembler(self, calibration_rotation_blue[i])
-            robo_message_blue = RoboterOperation.roboter_message_move(self, network_parameters.tnblue, "C:R:GOTO_POSITION", coordinates_message_blue, "R:C:GOTO_POSITION")
-            coordinates_blue = RoboterOperation.message_parser(self, robo_message_blue)
+            coordinates_message_blue = RobOp.message_assembler(self, calibration_rotation_blue[i])
+            robo_message_blue = RobOp.roboter_message_move(self, network_parameters.tnblue, "C:R:GOTO_POSITION", coordinates_message_blue, "R:C:GOTO_POSITION")
+            coordinates_blue = RobOp.message_parser(self, robo_message_blue)
             self.populate_coordinates_blue(coordinates_blue)
             time.sleep(0.2)
-            PXIOperation.UDP_connection_PXI(self,udp_messages.message_PXI_reached_position, udp_messages.response_PXI_reached_position)
-            PXIOperation.UDP_connection_PXI(self,udp_messages.message_PXI_Log_coord +f"Coordinates Blue (X,Y,Z,R): {coordinates_message_blue}" + "\t" + f"Coordinates Red (X,Y,Z,R): {coordinates_message_red} \n" , udp_messages.response_PXI_Log_coord)
+            PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_reached_position, udp_messages.response_PXI_reached_position)
+            PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_Log_coord +f"Coordinates Blue (X,Y,Z,R): {coordinates_message_blue}" + "\t" + f"Coordinates Red (X,Y,Z,R): {coordinates_message_red} \n" , udp_messages.response_PXI_Log_coord)
             self.progressBar.setValue(((i+1)*100)/len(calibration_rotation_dataframe))
         
         print("finished measurement")
