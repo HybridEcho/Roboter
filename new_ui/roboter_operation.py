@@ -112,15 +112,23 @@ class RoboterOperation(qtc.QObject):
         return coordinates_message
 
 
-    def calibration_calculation(angle_step_size, total_rotation, start_position_blue, start_position_red):
+    def calibration_calculation(self, which_robot, angle_step_size, total_rotation, start_position_blue, start_position_red):
         start_position_calibration_blue = start_position_blue
         start_position_calibration_red = start_position_red
-        start_position_calibration_blue[3] = start_position_calibration_blue[3] - total_rotation/2
         number_of_steps = total_rotation / angle_step_size
-        step_blue = np.arange(0, total_rotation+angle_step_size, angle_step_size)
-        #calibration_array_blue = np.column_stack((start_position_calibration_blue[0] + step_blue*0, start_position_calibration_blue[1] + step_blue*0, start_position_calibration_blue[2] + step_blue*0, np.round(start_position_calibration_blue[3] + step_blue, 3)))
-        calibration_array_blue = np.column_stack((start_position_calibration_blue[0] + step_blue*0, start_position_calibration_blue[1] + step_blue*0, start_position_calibration_blue[2] + step_blue*0, start_position_calibration_blue[3] + step_blue))
-        calibration_array_red = np.tile(start_position_calibration_red, (int(number_of_steps+1), 1))
+        step_array = np.arange(0, total_rotation+angle_step_size, angle_step_size)
+        
+        if which_robot == "Blue":
+            start_position_calibration_blue[3] = start_position_calibration_blue[3] - total_rotation/2
+            calibration_array_blue = np.column_stack((start_position_calibration_blue[0] + step_array*0, start_position_calibration_blue[1] + step_array*0, start_position_calibration_blue[2] + step_array*0, start_position_calibration_blue[3] + step_array))
+            calibration_array_red = np.tile(start_position_calibration_red, (int(number_of_steps+1), 1))
+        elif which_robot == "Red":
+            start_position_calibration_red[3] = start_position_calibration_red[3] - total_rotation/2
+            calibration_array_blue = np.tile(start_position_calibration_blue, (int(number_of_steps+1), 1))
+            calibration_array_red = np.column_stack((start_position_calibration_red[0] + step_array*0, start_position_calibration_red[1] + step_array*0, start_position_calibration_red[2] + step_array*0, start_position_calibration_red[3] + step_array))
+        else:
+            print("Error! Please select robot")
+
         print(calibration_array_blue)
         print(calibration_array_red)
         calibration_array = np.concatenate((calibration_array_blue, calibration_array_red), axis=1)

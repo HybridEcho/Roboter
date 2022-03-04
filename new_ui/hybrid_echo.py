@@ -161,6 +161,7 @@ class MainWindow(MW_Base, MW_Ui):
         else:
             self.which_robot = "Error"
 
+
     def set_start_point(self):
         self.coordinates_blue = self.read_coordinates_blue()
         self.coordinates_red = self.read_coordinates_red()
@@ -172,6 +173,7 @@ class MainWindow(MW_Base, MW_Ui):
         self.setup_blue_y.setValue(coordinates_blue[1])
         self.setup_blue_z.setValue(coordinates_blue[2])
         self.setup_blue_r.setValue(coordinates_blue[3])
+    
     
     def populate_coordinates_red(self, coordinates_red):
         #coordinates_red = np.array([1.11, 2.22, 3.33, 4.44]) #ersetzen
@@ -234,7 +236,7 @@ class MainWindow(MW_Base, MW_Ui):
         total_rotation = self.rotation_total_rotation.value()
         rotation_distance = self.rotation_distance.value()
 
-        self.calibration_rotation_dataframe = RobOp.calibration_calculation(angle_step_size, total_rotation, self.coordinates_blue, self.coordinates_red)
+        self.calibration_rotation_dataframe = RobOp.calibration_calculation(self, self.which_robot, angle_step_size, total_rotation, self.coordinates_blue, self.coordinates_red)
 
     
     def save_csv(self):
