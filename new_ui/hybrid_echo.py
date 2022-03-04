@@ -37,6 +37,11 @@ class MainWindow(MW_Base, MW_Ui):
         self.preview_no_turning.setVisible(True)
 
 
+        ##initialize variables##
+        self.checklist_done = False
+        self.lineedit_done = False
+
+
         ##################
         # Connect Events #
         ##################
@@ -58,6 +63,11 @@ class MainWindow(MW_Base, MW_Ui):
 
         self.setup_set_start_point.clicked.connect(self.set_start_point)
         
+        ##documentation##
+        self.documentation_name_measurement.textChanged.connect(self.lineedit_checker)
+        self.documentation_measurement_notes.textChanged.connect(self.lineedit_checker)
+
+
         ## rotation ##
 
         self.rotation_calculate.clicked.connect(self.rotation_calculation)
@@ -66,11 +76,11 @@ class MainWindow(MW_Base, MW_Ui):
         ## checklist ##
         self.checklist_save_csv.clicked.connect(self.save_csv)
         #self.checklist_start_measurement.clicked.connect(self.start_measurement)
-        self.checklist_checkBox_1.stateChanged.connect(self.checklist)
-        self.checklist_checkBox_2.stateChanged.connect(self.checklist)
-        self.checklist_checkBox_3.stateChanged.connect(self.checklist)
-        self.checklist_checkBox_4.stateChanged.connect(self.checklist)
-        self.checklist_checkBox_5.stateChanged.connect(self.checklist)
+        self.checklist_checkBox_1.stateChanged.connect(self.checklist_checker)
+        self.checklist_checkBox_2.stateChanged.connect(self.checklist_checker)
+        self.checklist_checkBox_3.stateChanged.connect(self.checklist_checker)
+        self.checklist_checkBox_4.stateChanged.connect(self.checklist_checker)
+        self.checklist_checkBox_5.stateChanged.connect(self.checklist_checker)
 
 
         self.checklist_start_measurement.clicked.connect(self.proceed_to_measurement)
@@ -100,12 +110,25 @@ class MainWindow(MW_Base, MW_Ui):
     def servo_red_off(self):
         RoboterOperation.roboter_message(self, network_parameters.tnred, "C:R:SERVO_OFF", "R:C:SERVO_OFF")
         
-    def checklist(self):
+    def checklist_checker(self):
         if self.checklist_checkBox_1.isChecked() == True and self.checklist_checkBox_2.isChecked() == True and self.checklist_checkBox_3.isChecked() == True and self.checklist_checkBox_4.isChecked() == True and self.checklist_checkBox_5.isChecked() == True:
+            self.checklist_done = True
+        else:
+            self.checklist_done = False
+        self.proceed_to_measurement_state()
+
+    def lineedit_checker(self):
+        if self.documentation_name_measurement.text() and self.documentation_measurement_notes.text():
+            self.lineedit_done = True
+        else:
+            self.lineedit_done = False
+        self.proceed_to_measurement_state()
+
+    def proceed_to_measurement_state(self):
+        if self.checklist_done == True and self.lineedit_done == True:
             self.checklist_start_measurement.setEnabled(True)
         else:
-            return
-
+            self.checklist_start_measurement.setEnabled(False)
 
     def preview_state(self):
         if self.rotation_blue_robot.isChecked() == True:
