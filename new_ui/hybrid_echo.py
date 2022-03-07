@@ -36,6 +36,8 @@ class MainWindow(MW_Base, MW_Ui):
         self.preview_red_turning.setVisible(False)
         self.preview_no_turning.setVisible(True)
 
+        self.status_progressbar.setValue(0)
+
         ##Initialization of variables##
         self.checklist_done = False
         self.lineedit_done = False
@@ -82,7 +84,7 @@ class MainWindow(MW_Base, MW_Ui):
 
         ## checklist ##
         self.checklist_save_csv.clicked.connect(self.save_csv)
-        #self.checklist_start_measurement.clicked.connect(self.start_measurement)
+        
         self.checklist_checkBox_1.stateChanged.connect(self.checklist_checker)
         self.checklist_checkBox_2.stateChanged.connect(self.checklist_checker)
         self.checklist_checkBox_3.stateChanged.connect(self.checklist_checker)
@@ -99,6 +101,10 @@ class MainWindow(MW_Base, MW_Ui):
 
         ##linear array##
         self.lin_pushButton_1.clicked.connect(self.adapt_graph)
+
+
+        ##measurement##
+        self.control_play.clicked.connect(self.start_measurement)
 
         ##################
         ##################
@@ -266,10 +272,10 @@ class MainWindow(MW_Base, MW_Ui):
     def start_measurement(self):
         angle_step_size = self.rotation_angle_step_size.value() #in Funktion integrieren
         total_rotation = self.rotation_total_rotation.value() #in Funktion integrieren
-        rotation_distance = self.rotation_distance.value() #in Funktion integrieren
+        rotation_distance = self.rotation_rotation_distance.value() #in Funktion integrieren
 
-        PXIOp.UDP_connection_PXI(self, udp_messages.message_PXI_start + "Test", udp_messages.response_PXI_start  + "Test")
-        PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_Log_parameter +f"Angle Step [deg] {angle_step_size} \n Total Angle Range [deg] {total_rotation} \n Rotation Distance [cm] {rotation_distance} \n" , udp_messages.response_PXI_Log_parameter)
+        #PXIOp.UDP_connection_PXI(self, udp_messages.message_PXI_start + "Test", udp_messages.response_PXI_start  + "Test")
+        #PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_Log_parameter +f"Angle Step [deg] {angle_step_size} \n Total Angle Range [deg] {total_rotation} \n Rotation Distance [cm] {rotation_distance} \n" , udp_messages.response_PXI_Log_parameter)
         
         calibration_rotation_blue = self.calibration_rotation_dataframe[["Blue_X","Blue_Y","Blue_Z", "Blue_R"]].to_numpy()
         calibration_rotation_red = self.calibration_rotation_dataframe[["Red_X","Red_Y","Red_Z", "Red_R"]].to_numpy()
@@ -285,14 +291,15 @@ class MainWindow(MW_Base, MW_Ui):
             self.coordinates_blue = RobOp.message_parser(self, robo_message_blue)
             self.populate_coordinates_blue(self.coordinates_blue)
             time.sleep(0.2)
-            PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_reached_position, udp_messages.response_PXI_reached_position)
-            PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_Log_coord +f"Coordinates Blue (X,Y,Z,R): {coordinates_message_blue}" + "\t" + f"Coordinates Red (X,Y,Z,R): {coordinates_message_red} \n" , udp_messages.response_PXI_Log_coord)
-            self.progressBar.setValue(((i+1)*100)/len(self.calibration_rotation_dataframe))
+            #PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_reached_position, udp_messages.response_PXI_reached_position)
+            #PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_Log_coord +f"Coordinates Blue (X,Y,Z,R): {coordinates_message_blue}" + "\t" + f"Coordinates Red (X,Y,Z,R): {coordinates_message_red} \n" , udp_messages.response_PXI_Log_coord)
+            self.status_progressbar.setValue(((i+1)*100)/len(self.calibration_rotation_dataframe))
         
         print("finished measurement")
 
 
 if __name__ == '__main__':
     app = qtw.QApplication(sys.argv)
+    app.setStyle("Fusion")
     mw = MainWindow()
     sys.exit(app.exec())
