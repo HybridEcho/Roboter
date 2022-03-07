@@ -97,6 +97,9 @@ class MainWindow(MW_Base, MW_Ui):
         self.rotation_red_robot.toggled.connect(self.preview_state)
         self.rotation_red_robot.toggled.connect(self.robot_selection)
 
+        ##linear array##
+        self.lin_pushButton_1.clicked.connect(self.adapt_graph)
+
         ##################
         ##################
 
@@ -234,6 +237,12 @@ class MainWindow(MW_Base, MW_Ui):
         robo_message = RobOp.roboter_message_move(self, network_parameters.tnred, "C:R:GOTO_POSITION", coordinates_message, "R:C:GOTO_POSITION")
         self.coordinates_red = RobOp.message_parser(self, robo_message)
         self.populate_coordinates_red(self.coordinates_red)
+
+
+    def adapt_graph(self):
+        self.lin_label.resize(20, 40)
+
+
 
 
     def rotation_calculation(self):
