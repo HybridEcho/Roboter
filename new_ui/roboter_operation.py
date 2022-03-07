@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from parameter import network_parameters
 import re
+import copy
 
 class RoboterOperation(qtc.QObject):
     def __init__(self):
@@ -54,37 +55,6 @@ class RoboterOperation(qtc.QObject):
         return reply
         
 
-    def roboter_feedback(self, tn_robo, exp_feedback_ascii):
-        """Receives feedback of roboter controller via ethernet
-
-        Parameters
-        ----------
-        tn_robo : Class with host adress
-            Ethernet adress
-        exp_feedback_ascii : [type]
-            [description]
-        """
-        info_from_robo_ascii = tn_robo.read_until(exp_feedback_ascii, 10.0) #10 Sekunden Wartezeit
-        info_from_robo = info_from_robo_ascii.decode("ascii")
-        info_from_robo = str(info_from_robo)
-        exp_feedback = exp_feedback_ascii.decode("ascii")
-        exp_feedback =str(exp_feedback)
-        if exp_feedback not in info_from_robo:
-            print("Error-Schleife")
-            print(info_from_robo)
-            error = tn_robo.read_until("doesntmatter".encode("ascii"), 3.0) #Workaround, auf Fehler warten
-            print(error)
-            return error
-        elif "P" in info_from_robo:
-            print("P-Schleife")
-            message_from_robo = tn_robo.read_until("\n".encode("ascii"), 2.0) 
-            message_from_robo = message_from_robo.decode("ascii")
-            message_from_robo = message_from_robo.strip("\n""\r")
-            print(message_from_robo)
-        elif "WRONG" in info_from_robo:
-            print(info_from_robo)
-            return info_from_robo
-
     def measurement_execution(self, dataframe):
         for i in dataframe.index:
             print(dataframe["Blue_X"][i], dataframe["Blue_Y"][i], dataframe["Blue_Z"][i], dataframe["Blue_R"][i])
@@ -113,18 +83,18 @@ class RoboterOperation(qtc.QObject):
 
 
     def calibration_calculation(self, which_robot, angle_step_size, total_rotation, start_position_blue, start_position_red):
-        start_position_calibration_blue = start_position_blue
-        start_position_calibration_red = start_position_red
+        start_position_calibration_blue = copy.copy(start_position_blue)
+        start_position_calibration_red = copy.copy(start_position_red)
         number_of_steps = total_rotation / angle_step_size
         step_array = np.arange(0, total_rotation+angle_step_size, angle_step_size)
         
         if which_robot == "Blue":
             start_position_calibration_blue[3] = start_position_calibration_blue[3] - total_rotation/2
             calibration_array_blue = np.column_stack((start_position_calibration_blue[0] + step_array*0, start_position_calibration_blue[1] + step_array*0, start_position_calibration_blue[2] + step_array*0, start_position_calibration_blue[3] + step_array))
-            calibration_array_red = np.tile(start_position_calibration_red, (int(number_of_steps+1), 1))
+            calibration_array_red = np.tile(start_position_red, (int(number_of_steps+1), 1))
         elif which_robot == "Red":
             start_position_calibration_red[3] = start_position_calibration_red[3] - total_rotation/2
-            calibration_array_blue = np.tile(start_position_calibration_blue, (int(number_of_steps+1), 1))
+            calibration_array_blue = np.tile(start_position_blue, (int(number_of_steps+1), 1))
             calibration_array_red = np.column_stack((start_position_calibration_red[0] + step_array*0, start_position_calibration_red[1] + step_array*0, start_position_calibration_red[2] + step_array*0, start_position_calibration_red[3] + step_array))
         else:
             print("Error! Please select robot")

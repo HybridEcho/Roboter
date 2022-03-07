@@ -15,8 +15,8 @@ from pxi_operation import PXIOperation as PXIOp
 import time
 
 
-#os.chdir("C:/Users/Moritz/Documents/Code/Roboter/new_ui") #für Windows
-os.chdir("/Users/julian/Documents/HybridEcho/Roboter/new_ui") #für macOS
+os.chdir("C:/Users/Moritz/Documents/Code/Roboter/new_ui") #für Windows
+#os.chdir("/Users/julian/Documents/HybridEcho/Roboter/new_ui") #für macOS
 MW_Ui, MW_Base = uic.loadUiType("gui_view.ui")
 
 
@@ -43,8 +43,13 @@ class MainWindow(MW_Base, MW_Ui):
 
         self.coordinates_blue = [0, 0, 0, 0]
         self.coordinates_red = [0, 0, 0, 0]
+
+        self.angle_step_size = 0
+        self.total_rotation = 0
+        self.rotation_distance = 0
+
         
-        self.calibration_rotation_dataframe
+        self.calibration_rotation_dataframe = pd.DataFrame(columns = ["Blue_X","Blue_Y","Blue_Z", "Blue_R", "Red_X","Red_Y","Red_Z", "Red_R"])
 
         ########################
         # Connection of Events #
@@ -87,8 +92,10 @@ class MainWindow(MW_Base, MW_Ui):
         self.checklist_start_measurement.clicked.connect(self.proceed_to_measurement)
 
         ##rotation##
-        self.rotation_blue_robot.toggled.connect(self.preview_state, self.robot_selection)
-        self.rotation_red_robot.toggled.connect(self.preview_state, self.robot_selection)
+        self.rotation_blue_robot.toggled.connect(self.preview_state)
+        self.rotation_blue_robot.toggled.connect(self.robot_selection)
+        self.rotation_red_robot.toggled.connect(self.preview_state)
+        self.rotation_red_robot.toggled.connect(self.robot_selection)
 
         ##################
         ##################
@@ -168,7 +175,6 @@ class MainWindow(MW_Base, MW_Ui):
 
 
     def populate_coordinates_blue(self, coordinates_blue):
-        #coordinates_blue = np.array([1.11, 2.22, 3.33, 4.44]) #ersetzen
         self.setup_blue_x.setValue(coordinates_blue[0])
         self.setup_blue_y.setValue(coordinates_blue[1])
         self.setup_blue_z.setValue(coordinates_blue[2])
@@ -176,7 +182,6 @@ class MainWindow(MW_Base, MW_Ui):
     
     
     def populate_coordinates_red(self, coordinates_red):
-        #coordinates_red = np.array([1.11, 2.22, 3.33, 4.44]) #ersetzen
         self.setup_red_x.setValue(coordinates_red[0])
         self.setup_red_y.setValue(coordinates_red[1])
         self.setup_red_z.setValue(coordinates_red[2])
@@ -232,15 +237,16 @@ class MainWindow(MW_Base, MW_Ui):
 
 
     def rotation_calculation(self):
-        angle_step_size = self.rotation_angle_step_size.value()
-        total_rotation = self.rotation_total_rotation.value()
-        rotation_distance = self.rotation_distance.value()
+        self.angle_step_size = self.rotation_angle_step_size.value()
+        self.total_rotation = self.rotation_total_rotation.value()
+        self.rotation_distance = self.rotation_rotation_distance.value()
 
-        self.calibration_rotation_dataframe = RobOp.calibration_calculation(self, self.which_robot, angle_step_size, total_rotation, self.coordinates_blue, self.coordinates_red)
+        self.calibration_rotation_dataframe = RobOp.calibration_calculation(self, self.which_robot, self.angle_step_size, self.total_rotation, self.coordinates_blue, self.coordinates_red)
 
     
     def save_csv(self):
         filename = "C:/Users/Moritz/Documents/Code/Roboter/new_ui/test.csv"
+        #filename = "/Users/julian/Documents/HybridEcho/Roboter/new_ui"
         RobOp.save_to_csv(self, self.calibration_rotation_dataframe, filename)
 
 

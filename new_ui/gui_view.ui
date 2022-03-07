@@ -150,7 +150,7 @@
           <item row="1" column="6">
            <widget class="QDoubleSpinBox" name="setup_blue_r">
             <property name="suffix">
-             <string> mm</string>
+             <string> °</string>
             </property>
             <property name="minimum">
              <double>-1000.000000000000000</double>
@@ -237,7 +237,7 @@
           <item row="2" column="6">
            <widget class="QDoubleSpinBox" name="setup_red_r">
             <property name="suffix">
-             <string> mm</string>
+             <string> °</string>
             </property>
             <property name="minimum">
              <double>-1000.000000000000000</double>
@@ -660,7 +660,7 @@
                <double>360.000000000000000</double>
               </property>
              </widget>
-             <widget class="QDoubleSpinBox" name="rotation_distance">
+             <widget class="QDoubleSpinBox" name="rotation_rotation_distance">
               <property name="geometry">
                <rect>
                 <x>330</x>
