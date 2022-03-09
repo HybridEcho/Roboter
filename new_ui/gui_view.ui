@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1105</width>
-    <height>756</height>
+    <width>1143</width>
+    <height>822</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,7 +20,7 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+   <item row="1" column="0">
     <widget class="QTabWidget" name="tab_widget">
      <property name="font">
       <font>
@@ -2123,6 +2123,22 @@
        <string>Demo</string>
       </attribute>
      </widget>
+    </widget>
+   </item>
+   <item row="0" column="0" alignment="Qt::AlignHCenter">
+    <widget class="QLabel" name="ekfz_logo">
+     <property name="minimumSize">
+      <size>
+       <width>154</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>pictures/ekfz_logo.png</pixmap>
+     </property>
     </widget>
    </item>
   </layout>
