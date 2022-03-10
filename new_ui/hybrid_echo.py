@@ -24,23 +24,36 @@ class RoboterController(qtc.QObject):
 
     finished = qtc.pyqtSignal()
     progress = qtc.pyqtSignal(float)
-
+    current_coordinates_blue = qtc.pyqtSignal(list)
+    current_coordinates_red = qtc.pyqtSignal(list)
 
     def __init__(self):
         super().__init__()
-        self.measurement_dataframe = None
+
 
     @qtc.pyqtSlot(pd.DataFrame)
-    def set_measurement_dataframe(self, measurement_dataframe):
-        self.measurement_dataframe = measurement_dataframe
-
-    @qtc.pyqtSlot()
     def measurement_loop(self, measurement_dataframe):
 
-        array_blue = measurement_dataframe[["Blue_X","Blue_Y","Blue_Z", "Blue_R"]].to_numpy()
-        array_red = measurement_dataframe[["Red_X","Red_Y","Red_Z", "Red_R"]].to_numpy()
+        measurement_array_blue = measurement_dataframe[["Blue_X","Blue_Y","Blue_Z", "Blue_R"]].to_numpy()
+        measurement_array_red = measurement_dataframe[["Red_X","Red_Y","Red_Z", "Red_R"]].to_numpy()
 
         for i in range(len(measurement_dataframe)):
+
+            coordinates_message_blue = RobOp.message_assembler(self, measurement_array_blue[i])
+            coordinates_message_red = RobOp.message_assembler(self, measurement_array_red[i])
+            robo_message_blue = RobOp.roboter_message_move(self, network_parameters.tnblue, "C:R:GOTO_POSITION", coordinates_message_blue, "R:C:GOTO_POSITION")
+            robo_message_red = RobOp.roboter_message_move(self, network_parameters.tnred, "C:R:GOTO_POSITION", coordinates_message_red, "R:C:GOTO_POSITION")
+            coordinates_blue = RobOp.message_parser(self, robo_message_blue)
+            coordinates_red = RobOp.message_parser(self, robo_message_red)
+            
+            self.current_coordinates_blue.emit(coordinates_blue)
+            self.current_coordinates_red.emit(coordinates_red)
+
+            time.sleep(0.2)
+            #PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_reached_position, udp_messages.response_PXI_reached_position)
+            #PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_Log_coord +f"Coordinates Blue (X,Y,Z,R): {coordinates_message_blue}" + "\t" + f"Coordinates Red (X,Y,Z,R): {coordinates_message_red} \n" , udp_messages.response_PXI_Log_coord)
+        
+            print("finished measurement")
 
             self.progress.emit((i+1)/len(measurement_dataframe))
 
@@ -146,7 +159,7 @@ class MainWindow(MW_Base, MW_Ui):
 
 
         ##measurement##
-        self.control_play.clicked.connect(self.start_measurement)
+        self.control_play.clicked.connect(self.initialize_measurement)
 
         #############
         # Threading #
@@ -156,18 +169,22 @@ class MainWindow(MW_Base, MW_Ui):
         self.thread = qtc.QThread()
         self.roboter_controller.moveToThread(self.thread)
 
-
         #Connect signals and slots
-        self.thread.started.connect(self.roboter_controller.measurement_loop)
         self.roboter_controller.finished.connect(self.thread.quit)
-        self.roboter_controller.finished.connect(self.roboter_controller.deleteLater)
-        self.thread.finished.connect(self.thread.deleteLater)
-        self.roboter_controller.progress.connect(self.report_progress)
-
+        
         #Start the thread
         self.thread.start()
 
+        self.control_play.clicked(self.thread.start)
 
+        self.roboter_controller.progress.connect(self.report_progress)
+
+        self.roboter_controller.current_coordinates_blue.connect(self.populate_coordinates_blue)
+        self.roboter_controller.current_coordinates_red.connect(self.populate_coordinates_red)
+
+        self.initialize_measurement_finished.connect(self.roboter_controller.measurement_loop)
+
+        
         ##################
         ##################
 
@@ -386,10 +403,11 @@ class MainWindow(MW_Base, MW_Ui):
             angle_step_size = self.rotation_angle_step_size.value()
             total_rotation = self.rotation_total_rotation.value()
             rotation_distance = self.rotation_rotation_distance.value()
-            PXIOp.UDP_connection_PXI(self, udp_messages.message_PXI_start + "Test", udp_messages.response_PXI_start  + "Test")
-            PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_Log_parameter +f"Angle Step [deg] {angle_step_size} \n Total Angle Range [deg] {total_rotation} \n Rotation Distance [cm] {rotation_distance} \n" , udp_messages.response_PXI_Log_parameter)
+            #PXIOp.UDP_connection_PXI(self, udp_messages.message_PXI_start + "Test", udp_messages.response_PXI_start  + "Test")
+            #PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_Log_parameter +f"Angle Step [deg] {angle_step_size} \n Total Angle Range [deg] {total_rotation} \n Rotation Distance [cm] {rotation_distance} \n" , udp_messages.response_PXI_Log_parameter)
 
             self.initialize_measurement_finished.emit(self.calibration_rotation_dataframe)
+
         elif self.which_mode == "B-Scan":
             self.initialize_measurement_finished.emit(self.bscan_dataframe)
         elif self.which_mode == "Linear-Array":
@@ -398,32 +416,6 @@ class MainWindow(MW_Base, MW_Ui):
             self.initialize_measurement_finished.emit(self.two_d_array_dataframe)
         else:
             print("Please select mode.")
-    
-
-    @qtc.pyqtSlot()
-    def run_measurement(self):
-        
-
-    
-    def start_measurement(self):
-
-        coordinates_message_red = RobOp.message_assembler(self, calibration_rotation_red[0])
-        robo_message_red = RobOp.roboter_message_move(self, network_parameters.tnred, "C:R:GOTO_POSITION", coordinates_message_red, "R:C:GOTO_POSITION")
-        self.coordinates_red = RobOp.message_parser(self, robo_message_red)
-        self.populate_coordinates_red(self.coordinates_red)
-
-
-        for i in range(len(calibration_rotation_blue)):
-            coordinates_message_blue = RobOp.message_assembler(self, calibration_rotation_blue[i])
-            robo_message_blue = RobOp.roboter_message_move(self, network_parameters.tnblue, "C:R:GOTO_POSITION", coordinates_message_blue, "R:C:GOTO_POSITION")
-            self.coordinates_blue = RobOp.message_parser(self, robo_message_blue)
-            self.populate_coordinates_blue(self.coordinates_blue)
-            time.sleep(0.2)
-            #PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_reached_position, udp_messages.response_PXI_reached_position)
-            #PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_Log_coord +f"Coordinates Blue (X,Y,Z,R): {coordinates_message_blue}" + "\t" + f"Coordinates Red (X,Y,Z,R): {coordinates_message_red} \n" , udp_messages.response_PXI_Log_coord)
-            self.status_progressbar.setValue(((i+1)*100)/len(self.calibration_rotation_dataframe))
-        
-        print("finished measurement")
 
 
 if __name__ == '__main__':
