@@ -33,6 +33,7 @@ class RoboterController(qtc.QObject):
 
     @qtc.pyqtSlot(pd.DataFrame)
     def measurement_loop(self, measurement_dataframe):
+        print("Welcome to measurement loop")
 
         measurement_array_blue = measurement_dataframe[["Blue_X","Blue_Y","Blue_Z", "Blue_R"]].to_numpy()
         measurement_array_red = measurement_dataframe[["Red_X","Red_Y","Red_Z", "Red_R"]].to_numpy()
@@ -88,7 +89,7 @@ class MainWindow(MW_Base, MW_Ui):
         self.checklist_done = False
         self.lineedit_done = False
         self.which_robot = None
-        self.which_mode = None
+        self.which_mode = "Calibration"
 
         self.coordinates_blue = [0, 0, 0, 0]
         self.coordinates_red = [0, 0, 0, 0]
@@ -256,6 +257,7 @@ class MainWindow(MW_Base, MW_Ui):
     def robot_selection(self):
         if self.rotation_blue_robot.isChecked() == True:
             self.which_robot = "Blue"
+            print(self.which_robot)
         elif self.rotation_red_robot.isChecked() == True:
             self.which_robot = "Red"
         else:
@@ -371,7 +373,6 @@ class MainWindow(MW_Base, MW_Ui):
         self.rotation_distance = self.rotation_rotation_distance.value()
 
         self.calibration_rotation_dataframe = RobOp.calibration_calculation(self, self.which_robot, self.angle_step_size, self.total_rotation, self.coordinates_blue, self.coordinates_red)
-
 
     #def bscan_calculation(self):
         #self.bscan_dataframe = 
