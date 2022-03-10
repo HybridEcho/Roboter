@@ -131,8 +131,7 @@ class MainWindow(MW_Base, MW_Ui):
 
 
         ## mode selection##
-        self.planning_tab.currentChanged(self.mode_state)
-
+        self.planning_tab.currentChanged.connect(self.mode_state)
 
         ## rotation ##
 
@@ -175,7 +174,7 @@ class MainWindow(MW_Base, MW_Ui):
         #Start the thread
         self.thread.start()
 
-        self.control_play.clicked(self.thread.start)
+        self.control_play.clicked.connect(self.thread.start)
 
         self.roboter_controller.progress.connect(self.report_progress)
 
