@@ -28,22 +28,21 @@ class RoboterController(qtc.QObject):
 
     def __init__(self):
         super().__init__()
-
         self.measurement_dataframe = None
 
-        
+    @qtc.pyqtSlot(pd.DataFrame)
+    def set_measurement_dataframe(self, measurement_dataframe):
+        self.measurement_dataframe = measurement_dataframe
 
     @qtc.pyqtSlot()
     def measurement_loop(self, measurement_dataframe):
 
-        array_blue = self.measurement_dataframe[["Blue_X","Blue_Y","Blue_Z", "Blue_R"]].to_numpy()
-        array_red = self.measurement_dataframe[["Red_X","Red_Y","Red_Z", "Red_R"]].to_numpy()
+        array_blue = measurement_dataframe[["Blue_X","Blue_Y","Blue_Z", "Blue_R"]].to_numpy()
+        array_red = measurement_dataframe[["Red_X","Red_Y","Red_Z", "Red_R"]].to_numpy()
 
         for i in range(len(measurement_dataframe)):
 
             self.progress.emit((i+1)/len(measurement_dataframe))
-
-
 
         self.finished.emit()
 
@@ -54,7 +53,7 @@ class MainWindow(MW_Base, MW_Ui):
     # Definition of signals #
     #########################
     
-    calculation_finished = qtc.pyqtSignal(pd.DataFrame)
+    initialize_measurement_finished = qtc.pyqtSignal(pd.DataFrame)
 
     def __init__(self):
         """MainWindow constructor."""
@@ -86,6 +85,11 @@ class MainWindow(MW_Base, MW_Ui):
         self.rotation_distance = 0
 
         self.calibration_rotation_dataframe = pd.DataFrame(columns = ["Blue_X","Blue_Y","Blue_Z", "Blue_R", "Red_X","Red_Y","Red_Z", "Red_R"])
+        self.bscan_dataframe = pd.DataFrame(columns = ["Blue_X","Blue_Y","Blue_Z", "Blue_R", "Red_X","Red_Y","Red_Z", "Red_R"])
+        self.linear_array_dataframe = pd.DataFrame(columns = ["Blue_X","Blue_Y","Blue_Z", "Blue_R", "Red_X","Red_Y","Red_Z", "Red_R"])
+        self.two_d_array_dataframe = pd.DataFrame(columns = ["Blue_X","Blue_Y","Blue_Z", "Blue_R", "Red_X","Red_Y","Red_Z", "Red_R"])
+
+
 
         ########################
         # Connection of Events #
@@ -143,6 +147,26 @@ class MainWindow(MW_Base, MW_Ui):
 
         ##measurement##
         self.control_play.clicked.connect(self.start_measurement)
+
+        #############
+        # Threading #
+        #############
+        
+        self.roboter_controller = RoboterController()
+        self.thread = qtc.QThread()
+        self.roboter_controller.moveToThread(self.thread)
+
+
+        #Connect signals and slots
+        self.thread.started.connect(self.roboter_controller.measurement_loop)
+        self.roboter_controller.finished.connect(self.thread.quit)
+        self.roboter_controller.finished.connect(self.roboter_controller.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.roboter_controller.progress.connect(self.report_progress)
+
+        #Start the thread
+        self.thread.start()
+
 
         ##################
         ##################
@@ -322,7 +346,7 @@ class MainWindow(MW_Base, MW_Ui):
     def adapt_graph(self):
         self.lin_label.resize(20, 40)
 
-
+    ## Calculation ## 
 
     @qtc.pyqtSlot()
     def rotation_calculation(self):
@@ -331,8 +355,16 @@ class MainWindow(MW_Base, MW_Ui):
         self.rotation_distance = self.rotation_rotation_distance.value()
 
         self.calibration_rotation_dataframe = RobOp.calibration_calculation(self, self.which_robot, self.angle_step_size, self.total_rotation, self.coordinates_blue, self.coordinates_red)
-        self.calculation_finished.emit(self.calibration_rotation_dataframe) #To do
 
+
+    #def bscan_calculation(self):
+        #self.bscan_dataframe = 
+
+    #def linear_array_calculation(self):
+        #self.linear_array_dataframe =
+
+    #def two_d_array_calculation(self):
+        #self.two_d_array_dataframe = 
 
 
     @qtc.pyqtSlot()
@@ -356,31 +388,21 @@ class MainWindow(MW_Base, MW_Ui):
             rotation_distance = self.rotation_rotation_distance.value()
             PXIOp.UDP_connection_PXI(self, udp_messages.message_PXI_start + "Test", udp_messages.response_PXI_start  + "Test")
             PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_Log_parameter +f"Angle Step [deg] {angle_step_size} \n Total Angle Range [deg] {total_rotation} \n Rotation Distance [cm] {rotation_distance} \n" , udp_messages.response_PXI_Log_parameter)
-        # elif self.which_mode == "B-Scan":
-        #     pass
-        # elif self.which_mode == "Linear-Array":
-        #     pass
-        # elif self.which_mode == "2D-Array":
-        #     pass
-        # else:
+
+            self.initialize_measurement_finished.emit(self.calibration_rotation_dataframe)
+        elif self.which_mode == "B-Scan":
+            self.initialize_measurement_finished.emit(self.bscan_dataframe)
+        elif self.which_mode == "Linear-Array":
+            self.initialize_measurement_finished.emit(self.linear_array_dataframe)
+        elif self.which_mode == "2D-Array":
+            self.initialize_measurement_finished.emit(self.two_d_array_dataframe)
+        else:
+            print("Please select mode.")
     
 
     @qtc.pyqtSlot()
     def run_measurement(self):
-        self.thread = qtc.QThread()
-        self.roboter_controller = RoboterController()
-        self.roboter_controller.movetoThread(self.thread)
-
-
-        #Connect signals and slots
-        self.thread.started.connect(self.roboter_controller.measurement_loop)
-        self.roboter_controller.finished.connect(self.thread.quit)
-        self.roboter_controller.finished.connect(self.roboter_controller.deleteLater)
-        self.thread.finished.connect(self.thread.deleteLater)
-        self.roboter_controller.progress.connect(self.report_progress)
-
-        #Start the thread
-        self.thread.start()
+        
 
     
     def start_measurement(self):
