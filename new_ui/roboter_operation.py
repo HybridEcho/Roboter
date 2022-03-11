@@ -7,19 +7,8 @@ import re
 import copy
 
 class RoboterOperation(qtc.QObject):
-    def __init__(self):
-        pass
-    
-    
-    def dev_roboter_message(self, tn_robo, dev_message):
-        print(tn_robo + "---" + dev_message)
-
-
-    def dev_roboter_feedback(self):
-        tn_robo = input()
-        dev_feedback_message = input()
-        dev_feedback = tn_robo + "---" + dev_feedback_message
-        return dev_feedback
+    #def __init__(self):
+    #    pass
 
 
     def roboter_message(self, tn_robo, message, end_message):
@@ -35,33 +24,28 @@ class RoboterOperation(qtc.QObject):
             Message to end conversation
         """
         tn_robo.write(f"{message}\r\n".encode("ascii"))
-        print(message)        
-        print("message sent")
+        #print(message)        
+        #print("message sent")
         reply = tn_robo.read_until(f"{end_message}\r\n".encode("ascii"), 10)
-        print("read message")
+        #print("read message")
         return reply
 
 
     def roboter_message_move(self, tn_robo, message, coordinates_message, end_message):
         tn_robo.write(f"{message}\r\n".encode("ascii"))
-        print(message)
-        print("message sent")
+        #print(message)
+        #print("message sent")
         movement_message = "P1 = ".encode("ascii") + coordinates_message.encode("ascii") + " 0 0 2\r\n".encode("ascii")
         tn_robo.write(movement_message)
-        print(movement_message)
-        print("coordinates message sent")
+        #print(movement_message)
+        #print("coordinates message sent")
         reply = tn_robo.read_until(f"{end_message}\r\n".encode("ascii"), 10)
-        print("read message")
+        #print("read message")
         return reply
         
-
-    def measurement_execution(self, dataframe):
-        for i in dataframe.index:
-            print(dataframe["Blue_X"][i], dataframe["Blue_Y"][i], dataframe["Blue_Z"][i], dataframe["Blue_R"][i])
         
-
     def message_parser(self, message):
-        print(message)
+        #print(message)
         message_str = message.decode() # convert byte to string
         data_str_split = message_str.split('P11')[1] # split str by "P11"
         num_values =  re.findall(r'[-+]?(?:\d*\.\d+|\d+)', data_str_split) 
@@ -99,8 +83,8 @@ class RoboterOperation(qtc.QObject):
         else:
             print("Error! Please select robot")
 
-        print(calibration_array_blue)
-        print(calibration_array_red)
+        #print(calibration_array_blue)
+        #print(calibration_array_red)
         calibration_array = np.concatenate((calibration_array_blue, calibration_array_red), axis=1)
         calibration_dataframe = pd.DataFrame(calibration_array, columns = ["Blue_X","Blue_Y","Blue_Z", "Blue_R", "Red_X","Red_Y","Red_Z", "Red_R"])
         return calibration_dataframe

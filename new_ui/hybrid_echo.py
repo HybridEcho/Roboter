@@ -36,28 +36,50 @@ class RoboterController(qtc.QObject):
         print("Welcome to measurement loop")
 
         measurement_array_blue = measurement_dataframe[["Blue_X","Blue_Y","Blue_Z", "Blue_R"]].to_numpy()
+        print("measurement_array_blue")
+        print(measurement_array_blue)
         measurement_array_red = measurement_dataframe[["Red_X","Red_Y","Red_Z", "Red_R"]].to_numpy()
+        print("measurement_array_red")
+        print(measurement_array_red)
 
         for i in range(len(measurement_dataframe)):
-
+            print("starting loop")
+            print(f"Loop Nr {i}")
             coordinates_message_blue = RobOp.message_assembler(self, measurement_array_blue[i])
+            print("Measurement array blue [i]")
+            print(measurement_array_blue[i])
+            print("Coordinates Message Blue")
+            print(coordinates_message_blue)
             coordinates_message_red = RobOp.message_assembler(self, measurement_array_red[i])
+            print("Measurement array red [i]")
+            print(measurement_array_red[i])
+            print("Coordinates Message Red")
+            print(coordinates_message_red)
             robo_message_blue = RobOp.roboter_message_move(self, network_parameters.tnblue, "C:R:GOTO_POSITION", coordinates_message_blue, "R:C:GOTO_POSITION")
+            print("Robo message blue")
+            print(robo_message_blue)
             robo_message_red = RobOp.roboter_message_move(self, network_parameters.tnred, "C:R:GOTO_POSITION", coordinates_message_red, "R:C:GOTO_POSITION")
+            print("Robo message red")
+            print(robo_message_red)
             coordinates_blue = RobOp.message_parser(self, robo_message_blue)
+            print("Coordinates blue")
+            print(coordinates_blue)
+            print(type(coordinates_blue))
             coordinates_red = RobOp.message_parser(self, robo_message_red)
+            print("Coordinates red")
+            print(coordinates_red)
+            print(type(coordinates_blue))
             
             self.current_coordinates_blue.emit(coordinates_blue)
             self.current_coordinates_red.emit(coordinates_red)
-
+            
             time.sleep(0.2)
-            #PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_reached_position, udp_messages.response_PXI_reached_position)
-            #PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_Log_coord +f"Coordinates Blue (X,Y,Z,R): {coordinates_message_blue}" + "\t" + f"Coordinates Red (X,Y,Z,R): {coordinates_message_red} \n" , udp_messages.response_PXI_Log_coord)
-        
-            print("finished measurement")
+           #PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_reached_position, udp_messages.response_PXI_reached_position)
+           #PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_Log_coord +f"Coordinates Blue (X,Y,Z,R): {coordinates_message_blue}" + "\t" + f"Coordinates Red (X,Y,Z,R): {coordinates_message_red} \n" , udp_messages.response_PXI_Log_coord)
+            self.progress.emit((i+1)*100/len(measurement_dataframe))
 
-            self.progress.emit((i+1)/len(measurement_dataframe))
 
+        print("finished measurement")
         self.finished.emit()
 
 
@@ -257,7 +279,6 @@ class MainWindow(MW_Base, MW_Ui):
     def robot_selection(self):
         if self.rotation_blue_robot.isChecked() == True:
             self.which_robot = "Blue"
-            print(self.which_robot)
         elif self.rotation_red_robot.isChecked() == True:
             self.which_robot = "Red"
         else:
@@ -290,7 +311,7 @@ class MainWindow(MW_Base, MW_Ui):
         self.coordinates_red = self.read_coordinates_red()
 
 
-    @qtc.pyqtSlot()
+    @qtc.pyqtSlot(list)
     def populate_coordinates_blue(self, coordinates_blue):
         self.setup_blue_x.setValue(coordinates_blue[0])
         self.setup_blue_y.setValue(coordinates_blue[1])
@@ -298,7 +319,7 @@ class MainWindow(MW_Base, MW_Ui):
         self.setup_blue_r.setValue(coordinates_blue[3])
     
     
-    @qtc.pyqtSlot()
+    @qtc.pyqtSlot(list)
     def populate_coordinates_red(self, coordinates_red):
         self.setup_red_x.setValue(coordinates_red[0])
         self.setup_red_y.setValue(coordinates_red[1])
@@ -391,10 +412,9 @@ class MainWindow(MW_Base, MW_Ui):
         RobOp.save_to_csv(self, self.calibration_rotation_dataframe, filename)
 
 
-    @qtc.pyqtSlot()
-    def report_progress(self, n):
-        ##To do##
-        self.status_progressbar.setValue(((i+1)*100)/len(self.calibration_rotation_dataframe))
+    @qtc.pyqtSlot(float)
+    def report_progress(self, progress):
+        self.status_progressbar.setValue(progress)
 
     @qtc.pyqtSlot()
     def initialize_measurement(self):
