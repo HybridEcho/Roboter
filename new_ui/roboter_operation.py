@@ -90,6 +90,22 @@ class RoboterOperation(qtc.QObject):
         return calibration_dataframe
 
 
+    def linear_array_calculation(self, piezo_robot, cmut_position_left, cmut_position_right, cmut_position_upper, piezo_position):
+        cmut_position_left = copy.copy(cmut_position_left)
+        cmut_position_right = copy.copy(cmut_position_left)
+        cmut_position_upper = copy.copy(cmut_position_left)
+        piezo_position = copy.copy(cmut_position_left)
+
+             
+        
+
+        
+
+
+
+
+
+
     def save_to_csv(self, dataframe, filename):
         dataframe.to_csv(filename)
 

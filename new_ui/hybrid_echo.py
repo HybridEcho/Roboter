@@ -36,39 +36,15 @@ class RoboterController(qtc.QObject):
         print("Welcome to measurement loop")
 
         measurement_array_blue = measurement_dataframe[["Blue_X","Blue_Y","Blue_Z", "Blue_R"]].to_numpy()
-        print("measurement_array_blue")
-        print(measurement_array_blue)
         measurement_array_red = measurement_dataframe[["Red_X","Red_Y","Red_Z", "Red_R"]].to_numpy()
-        print("measurement_array_red")
-        print(measurement_array_red)
 
         for i in range(len(measurement_dataframe)):
-            print("starting loop")
-            print(f"Loop Nr {i}")
             coordinates_message_blue = RobOp.message_assembler(self, measurement_array_blue[i])
-            print("Measurement array blue [i]")
-            print(measurement_array_blue[i])
-            print("Coordinates Message Blue")
-            print(coordinates_message_blue)
             coordinates_message_red = RobOp.message_assembler(self, measurement_array_red[i])
-            print("Measurement array red [i]")
-            print(measurement_array_red[i])
-            print("Coordinates Message Red")
-            print(coordinates_message_red)
             robo_message_blue = RobOp.roboter_message_move(self, network_parameters.tnblue, "C:R:GOTO_POSITION", coordinates_message_blue, "R:C:GOTO_POSITION")
-            print("Robo message blue")
-            print(robo_message_blue)
             robo_message_red = RobOp.roboter_message_move(self, network_parameters.tnred, "C:R:GOTO_POSITION", coordinates_message_red, "R:C:GOTO_POSITION")
-            print("Robo message red")
-            print(robo_message_red)
             coordinates_blue = RobOp.message_parser(self, robo_message_blue)
-            print("Coordinates blue")
-            print(coordinates_blue)
-            print(type(coordinates_blue))
             coordinates_red = RobOp.message_parser(self, robo_message_red)
-            print("Coordinates red")
-            print(coordinates_red)
-            print(type(coordinates_blue))
             
             self.current_coordinates_blue.emit(coordinates_blue)
             self.current_coordinates_red.emit(coordinates_red)
@@ -77,7 +53,6 @@ class RoboterController(qtc.QObject):
            #PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_reached_position, udp_messages.response_PXI_reached_position)
            #PXIOp.UDP_connection_PXI(self,udp_messages.message_PXI_Log_coord +f"Coordinates Blue (X,Y,Z,R): {coordinates_message_blue}" + "\t" + f"Coordinates Red (X,Y,Z,R): {coordinates_message_red} \n" , udp_messages.response_PXI_Log_coord)
             self.progress.emit((i+1)*100/len(measurement_dataframe))
-
 
         print("finished measurement")
         self.finished.emit()
@@ -112,9 +87,16 @@ class MainWindow(MW_Base, MW_Ui):
         self.lineedit_done = False
         self.which_robot = None
         self.which_mode = "Calibration"
+        self.piezo_robot_linear_array = None
+        
 
         self.coordinates_blue = [0, 0, 0, 0]
         self.coordinates_red = [0, 0, 0, 0]
+
+        self.linear_array_initial_cmut_position_left = None
+        self.linear_array_initial_cmut_position_right = None
+        self.linear_array_initial_cmut_position_upper = None
+        self.linear_array_initial_piezo_position = None
 
         self.angle_step_size = 0
         self.total_rotation = 0
@@ -123,6 +105,8 @@ class MainWindow(MW_Base, MW_Ui):
         self.calibration_rotation_dataframe = pd.DataFrame(columns = ["Blue_X","Blue_Y","Blue_Z", "Blue_R", "Red_X","Red_Y","Red_Z", "Red_R"])
         self.bscan_dataframe = pd.DataFrame(columns = ["Blue_X","Blue_Y","Blue_Z", "Blue_R", "Red_X","Red_Y","Red_Z", "Red_R"])
         self.linear_array_dataframe = pd.DataFrame(columns = ["Blue_X","Blue_Y","Blue_Z", "Blue_R", "Red_X","Red_Y","Red_Z", "Red_R"])
+        self.linear_array_documentation = pd.DataFrame(columns = ["cMUT_X","cMUT_Y","cMUT_Z", "Piezo_X","Piezo_Y","Piezo_Z"])
+
         self.two_d_array_dataframe = pd.DataFrame(columns = ["Blue_X","Blue_Y","Blue_Z", "Blue_R", "Red_X","Red_Y","Red_Z", "Red_R"])
 
 
@@ -179,9 +163,25 @@ class MainWindow(MW_Base, MW_Ui):
         ##linear array##
         self.lin_pushButton_1.clicked.connect(self.adapt_graph)
 
+        self.linear_array_blue_robot.toggled.connect(self.robot_selection_linear_array)
+        self.linear_array_red_robot.toggled.connect(self.robot_selection_linear_array)
+
+        self.piezo_lock_save_position.clicked.connect(self.robot_piezo_lock)
+        self.piezo_lock_save_position.clicked.connect(self.linear_array_load_piezo)
+        self.piezo_unlock_position.clicked.connect(self.robot_piezo_unlock)
+
+        self.cmut_save_left_position.clicked.connect(self.linear_array_load_cmut_left)
+        self.cmut_save_upper_position.clicked.connect(self.linear_array_load_cmut_upper)
+        self.cmut_save_right_position.clicked.connect(self.linear_array_load_cmut_right)
+
 
         ##measurement##
         self.control_play.clicked.connect(self.initialize_measurement)
+        self.control_servo_blue_on.connect(self.servo_blue_on)
+        self.control_servo_blue_off.connect(self.servo_blue_off)
+        self.control_servo_red_on.connect(self.servo_red_on)
+        self.control_servo_red_off.connect(self.servo_red_off)
+
 
         #############
         # Threading #
@@ -283,6 +283,90 @@ class MainWindow(MW_Base, MW_Ui):
             self.which_robot = "Red"
         else:
             self.which_robot = "Error"
+
+    @qtc.pyqtSlot()
+    def robot_selection_linear_array(self):
+        if self.linear_array_blue_robot.isChecked() == True:
+            self.piezo_robot_linear_array = "Blue"
+        elif self.linear_array_red_robot.isChecked() == True:
+            self.piezo_robot_linear_array = "Red"
+        else:
+            self.piezo_robot_linear_array = "Error"
+
+
+    @qtc.pyqtSlot()
+    def robot_piezo_lock(self):
+        if self.piezo_robot_linear_array == "Blue":
+            RobOp.roboter_message(self, network_parameters.tnblue, "C:R:SERVO_ON", "R:C:SERVO_ON")
+        elif self.piezo_robot_linear_array == "Red":
+            RobOp.roboter_message(self, network_parameters.tnred, "C:R:SERVO_ON", "R:C:SERVO_ON")
+        else:
+            print("Error!")
+
+
+    @qtc.pyqtSlot()
+    def robot_piezo_unlock(self):
+        if self.piezo_robot_linear_array == "Blue":
+            RobOp.roboter_message(self, network_parameters.tnblue, "C:R:SERVO_OFF", "R:C:SERVO_OFF")
+        elif self.piezo_robot_linear_array == "Red":
+            RobOp.roboter_message(self, network_parameters.tnred, "C:R:SERVO_OFF", "R:C:SERVO_OFF")
+        else:
+            print("Please select robot to which piezo is attached")
+
+    
+    @qtc.pyqtSlot()
+    def linear_array_load_piezo(self):
+        if self.piezo_robot_linear_array == "Blue":
+            robo_message = RobOp.roboter_message(self, network_parameters.tnblue, "C:R:CURRENT_POSITION", "R:C:CURRENT_POSITION")
+            coordinates_blue = RobOp.message_parser(self, robo_message)
+            self.linear_array_initial_piezo_position = coordinates_blue
+        elif self.piezo_robot_linear_array == "Red":
+            robo_message = RobOp.roboter_message(self, network_parameters.tnred, "C:R:CURRENT_POSITION", "R:C:CURRENT_POSITION")
+            coordinates_red = RobOp.message_parser(self, robo_message)
+            self.linear_array_initial_piezo_position = coordinates_red
+        else:
+            print("Please select robot to which piezo is attached")
+
+    @qtc.pyqtSlot()
+    def linear_array_load_cmut_left(self):
+        if self.piezo_robot_linear_array == "Blue":
+            robo_message = RobOp.roboter_message(self, network_parameters.tnred, "C:R:CURRENT_POSITION", "R:C:CURRENT_POSITION")
+            coordinates_red = RobOp.message_parser(self, robo_message)
+            self.linear_array_initial_cmut_position_left = coordinates_red
+        elif self.piezo_robot_linear_array == "Red":
+            robo_message = RobOp.roboter_message(self, network_parameters.tnblue, "C:R:CURRENT_POSITION", "R:C:CURRENT_POSITION")
+            coordinates_blue = RobOp.message_parser(self, robo_message)
+            self.linear_array_initial_cmut_position_left = coordinates_blue
+        else:
+            print("Please select robot to which piezo is attached")
+
+
+    @qtc.pyqtSlot()
+    def linear_array_load_cmut_right(self):
+        if self.piezo_robot_linear_array == "Blue":
+            robo_message = RobOp.roboter_message(self, network_parameters.tnred, "C:R:CURRENT_POSITION", "R:C:CURRENT_POSITION")
+            coordinates_red = RobOp.message_parser(self, robo_message)
+            self.linear_array_initial_cmut_position_right = coordinates_red
+        elif self.piezo_robot_linear_array == "Red":
+            robo_message = RobOp.roboter_message(self, network_parameters.tnblue, "C:R:CURRENT_POSITION", "R:C:CURRENT_POSITION")
+            coordinates_blue = RobOp.message_parser(self, robo_message)
+            self.linear_array_initial_cmut_position_right = coordinates_blue
+        else:
+            print("Please select robot to which piezo is attached")
+
+    @qtc.pyqtSlot()
+    def linear_array_load_cmut_upper(self):
+        if self.piezo_robot_linear_array == "Blue":
+            robo_message = RobOp.roboter_message(self, network_parameters.tnred, "C:R:CURRENT_POSITION", "R:C:CURRENT_POSITION")
+            coordinates_red = RobOp.message_parser(self, robo_message)
+            self.linear_array_initial_cmut_position_upper = coordinates_red
+        elif self.piezo_robot_linear_array == "Red":
+            robo_message = RobOp.roboter_message(self, network_parameters.tnblue, "C:R:CURRENT_POSITION", "R:C:CURRENT_POSITION")
+            coordinates_blue = RobOp.message_parser(self, robo_message)
+            self.linear_array_initial_cmut_position_upper = coordinates_blue
+        else:
+            print("Please select robot to which piezo is attached")
+
 
     @qtc.pyqtSlot()
     def mode_state(self):
@@ -399,7 +483,7 @@ class MainWindow(MW_Base, MW_Ui):
         #self.bscan_dataframe = 
 
     #def linear_array_calculation(self):
-        #self.linear_array_dataframe =
+        self.linear_array_dataframe = 
 
     #def two_d_array_calculation(self):
         #self.two_d_array_dataframe = 
